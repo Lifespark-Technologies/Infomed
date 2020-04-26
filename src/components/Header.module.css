@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  padding: 1em;
+}
+
+.navList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navList li {
+  margin: 0 1em;
+}
+
+.navList li:first-child {
+  margin-left: 2em;
+}
