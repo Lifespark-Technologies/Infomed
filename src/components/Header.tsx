@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import { Link } from 'react-router-dom';
 
 export default () => {
   return (
@@ -7,9 +8,9 @@ export default () => {
       <div>ICULive</div>
       <nav>
         <ul className={styles.navList}>
-          <li>Home</li>
-          <li>Hospitals</li>
-          <li>Contact</li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/hospitals">Hospitals</Link></li>
+          <li><Link to="/">Contact</Link></li>
         </ul>
       </nav>
     </header>
