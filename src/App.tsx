@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
+import AppointmentScheduler from './components/AppointmentScheduler';
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
       <Header />
       <main>
         <Switch>
+          <Route path="/hospital/:hospitalId/book-appointment">
+            <AppointmentScheduler />
+          </Route>
           <Route path="/">
             <HospitalSearch />
           </Route>
