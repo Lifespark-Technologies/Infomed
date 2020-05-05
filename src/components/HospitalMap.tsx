@@ -1,7 +1,6 @@
 import React from 'react';
 import * as L from 'leaflet';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
-// import 'leaflet/dist/leaflet.css';
 
 
 type State = {
