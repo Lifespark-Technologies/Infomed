@@ -9,17 +9,22 @@ import { render } from '@testing-library/react';
 class App extends React.Component {
   render() {
     return (
-      <Router>
-        <Header />
-        <main>
-          <Switch>
-            <Route path="/">
-              <HospitalSearch />
-            </Route>
-          </Switch>
+      <div className="App">
+        <Router>
+          <Header />
+          <main>
+            <Switch>
+              <Route path="/">
+                <HospitalSearch />
+              </Route>
+            </Switch>
+          </main>
+        </Router>
+
+        <div id="map">
           <HospitalMap />
-        </main>
-      </Router>
+        </div>
+      </div>
     );
   }
 }
