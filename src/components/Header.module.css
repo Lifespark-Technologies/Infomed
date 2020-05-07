@@ -1,8 +1,9 @@
 .header {
   display: flex;
   padding: 1em;
+  align-items: center;
+  justify-content: center;
 }
-
 .navList {
   display: flex;
   list-style: none;
@@ -13,7 +14,14 @@
 .navList li {
   margin: 0 1em;
 }
-
 .navList li:first-child {
   margin-left: 2em;
+}
+.nav {
+  font-size: 3 vw;
+}
+.nav :hover {
+  font-size: 4vw;
+  padding: 5px 5px 5px 5px;
+  background-color: yellow;
 }
