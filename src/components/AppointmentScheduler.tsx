@@ -11,11 +11,13 @@ export default () => {
 
   useEffect(() => {
     (async () => {
+      // Fetch appointment slots from the server.
+      // TODO(@bl-nero): Actually use parameters from router here.
       const slots = await fetchAppointmentSlots('1', new Date(2020, 4, 1), new Date(2020, 6, 1));
       setAvailableSlots(slots);
       setStage(Stage.SelectDate);
     })();
-  }, []);
+  }, [/* TODO(@bl-nero): Restart effect when parameters from router change. */]);
 
   const pickDate = (date: Date) => {
     setDatePicked(date);
