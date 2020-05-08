@@ -1,0 +1,25 @@
+.timePicker {
+  width: 100%;
+  text-align: center;
+  height: 10em;
+  overflow: auto;
+}
+
+.timeLabel {
+  display: block;
+  padding: 0.2em;
+}
+
+.timeRadio {
+  appearance: none;
+  position: absolute;
+}
+
+.timeRadio + div {
+  border: 1px solid transparent;
+}
+
+.timeRadio:checked + div {
+  font-weight: bold;
+  border-color: #888 transparent;
+}
