@@ -1,6 +1,8 @@
+import { isBefore, addHours, addMinutes } from "date-fns";
+
 export interface GeoCoordinates {
-  lat: number;
-  long: number;
+  readonly lat: number;
+  readonly long: number;
 }
 
 export interface HospitalResponse {
@@ -10,21 +12,42 @@ export interface HospitalResponse {
   readonly admissionFormLink: string;
 }
 
-export const searchForHospitals = (name: string, near: GeoCoordinates): Promise<HospitalResponse[]> => {
+export const searchForHospitals = async (name: string, near: GeoCoordinates): Promise<HospitalResponse[]> => {
   // TODO: dummy API
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([{
-        id: '1',
-        name: 'Rajiv Gandhi Hospital',
-        coords: { lat: 12 + 56/60 + 18.3/60/60, long: 77 + 35/60 + 26.9/60/60 },
-        admissionFormLink: 'http://www.sdstrcrgicd.org/',
-      }, {
-        id: '2',
-        name: `Dummy ${name} hospital`,
-        coords: {...near},
-        admissionFormLink: 'https://google.com/',
-      }]);
-    }, 1000);
-  })
+  await wait(1000);
+  return [{
+    id: '1',
+    name: 'Rajiv Gandhi Hospital',
+    coords: { lat: 12 + 56 / 60 + 18.3 / 60 / 60, long: 77 + 35 / 60 + 26.9 / 60 / 60 },
+    admissionFormLink: 'http://www.sdstrcrgicd.org/',
+  }, {
+    id: '2',
+    name: `Dummy ${name} hospital`,
+    coords: { ...near },
+    admissionFormLink: 'https://google.com/',
+  }];
+};
+
+export interface AppointmentSlot {
+  start: Date;
+  end: Date;
 }
+
+export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end: Date): Promise<AppointmentSlot[]> => {
+  await wait(1000);
+
+  const slots = [];
+  for (let current = new Date(start.getTime()); isBefore(current, end); current = addHours(current, 1)) {
+    slots.push({
+      start: current,
+      end: addMinutes(current, 30),
+    });
+  }
+  return slots;
+};
+
+const wait = (delay: number) => new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve();
+  }, delay);
+});
