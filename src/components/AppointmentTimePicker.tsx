@@ -1,22 +1,37 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import styles from "./AppointmentTimePicker.module.css";
+import { AppointmentSlot } from "../apis/infomed";
+import { format } from "date-fns";
 
-export default () => {
+interface AppointmentTimePickerProps {
+  timeSlots: AppointmentSlot[];
+  onChange?: (slot: AppointmentSlot) => void;
+}
+
+export default ({ timeSlots, onChange }: AppointmentTimePickerProps) => {
   const choices = [];
-  for (let i = 0; i < 24; i++) {
-    choices.push(
-      <label key={i} className={styles.timeLabel}>
-        <input className={styles.timeRadio} name="timeSlot" type="radio" />
-        <div>{i}:00 – {i}:59</div>
-      </label>
-    );
-  }
+  const keyFor = (s: AppointmentSlot) => `${s.start.getTime()}-${s.end.getTime()}`;
+  const formatTime = (d: Date) => format(d, 'HH:mm');
+
+  // Note: this is not an accurate simulation of a "scroll to select" UI
+  // pattern; it's possible, but a bit difficult to achieve, so let's implement
+  // it later.
   return (
     <div>
       Pick time:
       <form className={styles.timePicker}>
-        {choices}
+        {timeSlots.map(timeSlot =>
+          <label key={keyFor(timeSlot)} className={styles.timeLabel}>
+            <input
+              className={styles.timeRadio}
+              name="timeSlot"
+              type="radio"
+              onChange={() => onChange?.(timeSlot)}
+            />
+            <div>{formatTime(timeSlot.start)} – {formatTime(timeSlot.end)}</div>
+          </label>
+        )}
       </form>
     </div>
-  )
+  );
 }
