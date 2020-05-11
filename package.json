@@ -47,5 +47,6 @@
     "@types/react-router-dom": "^5.1.5",
     "jest-date-mock": "^1.0.8",
     "ts-jest": "^25.4.0"
-  }
+  },
+  "proxy": "http://localhost:8000"
 }
