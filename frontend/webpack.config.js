@@ -1,4 +1,4 @@
-// const HtmlWebPackPlugin = require('html-webpack-plugin');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   module: {
@@ -26,11 +26,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx']
-  }
-  // plugins: [
-  //   new HtmlWebPackPlugin({
-  //     template: "./templates/frontend/index.html", // template html file
-  //     filename: "./index.html" // actual html file that it's supposed to render
-  //   })
-  // ]
+  },
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: "./public/index.html", // template html file
+      filename: "./index.html" // actual html file that's generated which is used by the server
+    })
+  ]
 };
