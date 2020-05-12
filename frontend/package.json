@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "webpack --mode development ./src/index.tsx --output ./static/frontend/main.js"
+    "dev": "webpack --mode development ./src/index.tsx --output ./static/frontend/main.js",
+    "servbuild": "webpack --mode production ./src/index.tsx --output ./static/frontend/main.js"
   },
   "eslintConfig": {
     "extends": "react-app"
