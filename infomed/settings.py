@@ -56,7 +56,7 @@ ROOT_URLCONF = 'infomed.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [], # in case you want to change the path: [os.path.join(BASE_DIR, 'frontend/static/frontend')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
