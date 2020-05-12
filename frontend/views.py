@@ -2,4 +2,6 @@ from django.shortcuts import render
 
 # Create your views here.
 def index(request):
-    return render(request, 'frontend/index.html')
+    # Django by default looks in the templates/ directory for views.
+    # To change, modify the TEMPLATES attribute in settings.py
+    return render(request, './frontend/index.html')
