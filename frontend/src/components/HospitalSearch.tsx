@@ -1,6 +1,7 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { searchForHospitals, HospitalResponse } from '../apis/infomed';
+import HospitalMap from './HospitalMap';
 
 /**
  * Renders a hospital search page. It is parametrized by the location provided
@@ -57,6 +58,7 @@ export default () => {
           <li><a href={sr.admissionFormLink}>{sr.name}</a> ({sr.coords.lat}, {sr.coords.long})</li>
         ))}
       </ul>
+      <HospitalMap />
     </>
   )
 }

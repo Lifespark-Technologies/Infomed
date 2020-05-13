@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
-import HospitalMap from './components/HospitalMap';
+import AppointmentScheduler from './components/AppointmentScheduler';
 
 class App extends React.Component {
   render() {
@@ -13,16 +13,15 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
+              <Route path="/hospital/:hospitalId/book-appointment">
+                <AppointmentScheduler />
+              </Route>
               <Route path="/">
                 <HospitalSearch />
               </Route>
             </Switch>
           </main>
         </Router>
-
-        <div id="map">
-          <HospitalMap />
-        </div>
       </div>
     );
   }
