@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'frontend',
     'rest_framework',
-    'hospitals.apps.HospitalsConfig',
     'django.contrib.gis'
 ]
 
