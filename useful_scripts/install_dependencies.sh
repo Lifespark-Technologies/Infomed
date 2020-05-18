@@ -4,12 +4,19 @@
 
 echo "WARNING: This script requires root access to install dependencies."
 
-read -p "Do you still want to continue? [Y/n] " yn
+read -p "Do you still want to continue? [Y/n] " yn1
 
-if [ $yn = "Y" ] || [ $yn = "y" ]; then
-	sudo apt install gdal-bin libgdal-dev
-	sudo apt install python3-gdal
-	sudo apt install binutils libproj-dev
+echo "WARNING: It will also install Python dependencies."
+
+read -p "Do you still want to continue? [Y/n] " yn2
+
+
+if [ $yn1 = "Y" ] || [ $yn1 = "y" ]; then
+	if [ $yn2 = "Y" ] || [ $yn2 = "y" ]; then
+		sudo apt install gdal-bin libgdal-dev
+		sudo apt install python3-gdal
+		sudo apt install binutils libproj-dev
+	fi
 fi
 
 read -p "Have you installed Docker? [Y/n] " yn
