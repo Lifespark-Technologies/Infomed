@@ -6,6 +6,7 @@ node_modules/
 .pnp.js
 frontend/package-lock.json
 main.js
+*.sqlite3
 
 # testing
 /coverage
