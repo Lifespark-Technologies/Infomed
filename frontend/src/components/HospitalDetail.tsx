@@ -7,9 +7,9 @@ export default () => {
 
   return (
     <div>
-        <HospitalDetailTop />
-        <HospitalAdminDetail />
-        <AppointmentSchedule />
+      <HospitalDetailTop />
+      <HospitalAdminDetail />
+      <AppointmentSchedule />
     </div>
   )
 }

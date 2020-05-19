@@ -1,24 +1,25 @@
 import React from 'react'
-import AppointmentScheduler from './AppointmentScheduler'
+import Calendar from "react-calendar";
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 export default () => {
 
-    const codeForm = {
-        
-    }
-
   return (
-    <div style={{display: 'flex'}}>
-      <div style={{textAlign: 'center', width: '50%'}}>
-        <input type="text" placeholder="Insert six digit code"/>
-        <br/>
-        <button>Join Visit</button>
-        <br/>
-        <button>Upload results</button>
-      </div>
-      <div>
-        <AppointmentScheduler />
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <input type="text" placeholder="Insert six digit code"/>
+          <br/>
+          <button>Join Visit</button>
+          <br/>
+          <button>Upload results</button>
+        </Col>
+        <Col>
+          <Calendar />
+        </Col>
+      </Row>
+    </Container>
   )
 }
