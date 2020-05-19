@@ -3,7 +3,7 @@ import {Calendar, dateFnsLocalizer} from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import styles from './AppointmentSchedule.module.css'
 import { format, parse, startOfWeek, getDay } from 'date-fns';
-import { enUS } from 'date-fns/esm/locale';
+import { enUS } from 'date-fns/locale';
 
 const localizer = dateFnsLocalizer({
   format,
