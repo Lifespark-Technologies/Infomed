@@ -5,6 +5,7 @@ import Header from './components/Header';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
+import HospitalDetail from './components/HospitalDetail'
 
 class App extends React.Component {
   render() {
@@ -14,6 +15,9 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
+              <Route path="/hospital/detail">
+                <HospitalDetail />
+              </Route>
               <Route path="/hospital/:hospitalId/book-appointment">
                 <AppointmentScheduler />
               </Route>
