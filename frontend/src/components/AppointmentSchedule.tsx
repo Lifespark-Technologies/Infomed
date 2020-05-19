@@ -1,10 +1,17 @@
 import React from 'react'
-import {Calendar, momentLocalizer} from 'react-big-calendar'
-import moment from 'moment'
+import {Calendar, dateFnsLocalizer} from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import styles from './AppointmentSchedule.module.css'
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { enUS } from 'date-fns/esm/locale';
 
-const localizer = momentLocalizer(moment)
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales: [enUS],
+});
 
 export default () => {
 

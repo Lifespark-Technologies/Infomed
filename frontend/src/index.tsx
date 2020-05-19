@@ -5,6 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'react-calendar/dist/Calendar.css';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
