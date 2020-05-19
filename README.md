@@ -79,9 +79,9 @@ To get your development environment up and running, follow these steps:
 3. Activate the virtual environment.
 4. Run `pip install -r requirements.txt` to install all the necessary dependencies.
 5. Install Docker. These are the steps that I used: https://linuxconfig.org/how-to-install-docker-on-ubuntu-20-04-lts-focal-fossa.
-6. Run `./install_dependencies.sh`. This will require root access. If you have installed
+6. Run `useful_scripts/install_dependencies.sh`. This will require root access. If you have installed
 Docker, then this will also set up the Postgres Docker container, with the username and password `user001` and `123456789` respectively.
-7. Run `./deploy.sh`, which if you open the file, will run `npm run dev` which runs Webpack and Babel to generate a `main.js` in `frontend/static/frontend/`, which is what the Python
-server serves to the user. This can be done manually or by running this script.
+7. Run `useful_scripts/deploy.sh`, which if you open the file, will run `npm run dev` which runs Webpack and Babel to generate a `main.js` in `frontend/static/frontend/`, which is what the Python
+server serves to the user. This can be done manually or by running this script. This script also copies the `infomed/example.env` into `infomed/.env`, which is sufficient, but SHOULD NOT BE USED WHEN DEPLOYED IN PRODUCTION. That file contains the database username, password, and secret keys which SHOULD BE CHANGED before we deploy.
 8. After you have completed the previous steps, you can test subsequent iterations just by running `python manage.py runserver`.
 
