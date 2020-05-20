@@ -1,6 +1,7 @@
 import React from 'react';
 import * as L from 'leaflet';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import styles from './HospitalMap.module.css';
 
 
 type State = {
@@ -20,7 +21,7 @@ class HospitalMap extends React.Component {
   render() {
     const position: L.LatLng = L.latLng(this.state.lat, this.state.lng);
     return (
-      <Map center={position} zoom={this.state.zoom}>
+      <Map center={position} zoom={this.state.zoom} className={styles.map}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

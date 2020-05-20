@@ -4,8 +4,9 @@
 node_modules/
 /.pnp
 .pnp.js
-package-lock.json
 main.js
+*.sqlite3
+.env
 
 # testing
 /coverage

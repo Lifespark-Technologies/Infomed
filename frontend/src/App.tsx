@@ -5,7 +5,7 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
-import AppointmentTimePicker from './components/AppointmentTimePicker';
+import HospitalDetail from './components/HospitalDetail'
 
 class App extends React.Component {
   render() {
@@ -13,9 +13,11 @@ class App extends React.Component {
       <div className="App">
         <Router>
           <Header />
-          {/* <AppointmentTimePicker timeSlots={slots} /> */}
           <main>
             <Switch>
+              <Route path="/hospital/detail">
+                <HospitalDetail />
+              </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
               </Route>
