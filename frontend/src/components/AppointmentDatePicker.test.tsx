@@ -1,7 +1,8 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import AppointmentDatePicker from "./AppointmentDatePicker";
 import { advanceTo } from "jest-date-mock";
+import userEvent from "@testing-library/user-event";
 
 const getSlots = () => [
   {
@@ -21,10 +22,10 @@ test('Picks an available date', () => {
     <AppointmentDatePicker availableSlots={getSlots()} onDatePicked={datePicked} />
   );
 
-  fireEvent.click(getByLabelText('January 10, 2020'));
+  userEvent.click(getByLabelText('January 10, 2020'));
   expect(datePicked).toBeCalledWith(new Date(2020, 0, 10));
 
-  fireEvent.click(getByLabelText('January 14, 2020'));
+  userEvent.click(getByLabelText('January 14, 2020'));
   expect(datePicked).toBeCalledWith(new Date(2020, 0, 14));
 });
 
@@ -35,7 +36,7 @@ test('Does not pick unavailable date', () => {
     <AppointmentDatePicker availableSlots={getSlots()} onDatePicked={datePicked} />
   );
 
-  fireEvent.click(getByLabelText('January 11, 2020'));
-  fireEvent.click(getByLabelText('January 13, 2020'));
+  userEvent.click(getByLabelText('January 11, 2020'));
+  userEvent.click(getByLabelText('January 13, 2020'));
   expect(datePicked).not.toBeCalled();
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import './index.css';
 import './App.css';
 import Header from './components/Header';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
 import HospitalDetail from './components/HospitalDetail'
@@ -18,7 +18,7 @@ class App extends React.Component {
               <Route path="/hospital/detail">
                 <HospitalDetail />
               </Route>
-              <Route path="/hospital/:hospitalId/book-appointment">
+              <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
               </Route>
               <Route path="/">

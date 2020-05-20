@@ -46,6 +46,12 @@ export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end
   return slots;
 };
 
+export const scheduleAppointment = async (
+  hospitalId: string, startDate: Date, email: string
+) => {
+  await wait(2000);
+};
+
 const wait = (delay: number) => new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve();
