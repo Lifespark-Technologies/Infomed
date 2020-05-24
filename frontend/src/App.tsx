@@ -5,7 +5,7 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
-import HospitalDetail from './components/HospitalDetail'
+import HospitalAdminLandingPage from './components/HospitalAdminLandingPage'
 
 class App extends React.Component {
   render() {
@@ -16,7 +16,7 @@ class App extends React.Component {
           <main>
             <Switch>
               <Route path="/hospital/detail">
-                <HospitalDetail />
+                <HospitalAdminLandingPage />
               </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
