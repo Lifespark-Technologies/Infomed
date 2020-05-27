@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
 import HospitalDetail from './components/HospitalDetail'
+import HospitalList from './components/HospitalList'
 
 class App extends React.Component {
   render() {
@@ -15,6 +16,9 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
+              <Route path="/hospital/list">
+                <HospitalList />
+              </Route>
               <Route path="/hospital/detail">
                 <HospitalDetail />
               </Route>
