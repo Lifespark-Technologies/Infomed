@@ -1,113 +1,49 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import {HospitalInventory, fetchHospitalInventory} from '../apis/infomed'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Badge from 'react-bootstrap/Badge'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import { useParams } from 'react-router-dom'
+
+interface HospitalInventoryListParams {
+  hospitalId: string;
+}
+
+export const HospitalInventoryList =  ({hospitalId}: HospitalInventoryListParams) => {
+
+  const [hospitalInventoryList, setHospitalInventoryList] = useState<HospitalInventory[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const inventoryList = await fetchHospitalInventory(hospitalId);
+      setHospitalInventoryList(inventoryList);
+    })();
+  });
+  
+  const inventoryItems = hospitalInventoryList.map((item) => 
+    <ListGroup.Item key={item.resourceType}>
+      <Row>
+        <Col xs={6}>{item.resourceType}</Col>
+        <Col xs={6}><Badge pill variant="primary">{item.available}</Badge>{' '} </Col>
+      </Row>
+    </ListGroup.Item>
+  );
+
+  return (
+    <ListGroup>
+      {inventoryItems}
+    </ListGroup>
+  )
+}
 
 export default () => {
-  
+  const { hospitalId } = useParams()
   return (
     <div>
       <h1>Fortis Hospital</h1>
       <h5>Inventory List</h5>
-      <ListGroup>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Hospital Bed Occupancy</Col>
-            <Col xs={6}><Badge pill variant="primary">63</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Number of Ventilators available</Col>
-            <Col xs={6}><Badge pill variant="primary">50</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>N95 Masks</Col>
-            <Col xs={6}><Badge pill variant="primary">73</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>3 Layer Mask</Col>
-            <Col xs={6}><Badge pill variant="primary">63</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>PPE Kit</Col>
-            <Col xs={6}><Badge pill variant="primary">100</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Sanitizer</Col>
-            <Col xs={6}><Badge pill variant="primary">1500</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Bleaching Powder</Col>
-            <Col xs={6}><Badge pill variant="primary">63</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Sodium Hypochlorite</Col>
-            <Col xs={6}><Badge pill variant="primary">10</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Chemical Gloves</Col>
-            <Col xs={6}><Badge pill variant="primary">2000</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Infrared Thermometer</Col>
-            <Col xs={6}><Badge pill variant="primary">150</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Handwash</Col>
-            <Col xs={6}><Badge pill variant="primary">5633</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Viral Transport Medium</Col>
-            <Col xs={6}><Badge pill variant="primary">62</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Swap Sticks</Col>
-            <Col xs={6}><Badge pill variant="primary">76</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>3 Layer packing Mask</Col>
-            <Col xs={6}><Badge pill variant="primary">23</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Ice Gel Pack</Col>
-            <Col xs={6}><Badge pill variant="primary">123</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Row>
-            <Col xs={6}>Rubbing Alcohol</Col>
-            <Col xs={6}><Badge pill variant="primary">60</Badge>{' '} </Col>
-          </Row>
-        </ListGroup.Item>
-      </ListGroup>
+        <HospitalInventoryList hospitalId={hospitalId} />
     </div>
   )
 }
