@@ -1,6 +1,7 @@
 import React from 'react'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
+// import countryList from 'react-select-country-list'
 
 export default () => {
 
@@ -23,10 +24,11 @@ export default () => {
         </Form.Row>
         <Form.Row>
           <Form.Group as={Col}>
-            <Form.Control type="text" placeholder="country"/>
+            <Form.Control as="select">
+              <option>1</option>
+            </Form.Control>
           </Form.Group>
         </Form.Row>
-
       </Form>
     </div>
   )
