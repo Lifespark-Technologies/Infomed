@@ -25,7 +25,13 @@ export const HospitalInventoryList =  ({hospitalId}: HospitalInventoryListParams
     <ListGroup.Item key={item.resourceType}>
       <Row>
         <Col xs={6}>{item.resourceType}</Col>
-        <Col xs={6}><Badge pill variant="primary">{item.available}</Badge>{' '} </Col>
+        <Col xs={6}>
+          <Badge pill variant="primary">
+            {item.available ? `${item.available} of ` : '0 of '}
+            {item.total ? `${item.total} ` : '0 '}
+            {item.unit}
+          </Badge>{' '} 
+        </Col>
       </Row>
     </ListGroup.Item>
   );
