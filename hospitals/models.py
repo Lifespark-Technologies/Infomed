@@ -31,7 +31,7 @@ class AppointmentSlot(models.Model):
     end = models.DateTimeField()
 
     # Ensuring that only the two choices described above are possible.
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, blank="")
 
     # Identify the hospital associated with the slot.
     hospital = models.ForeignKey(Hospital, related_name="appointment_slots", on_delete=models.CASCADE)
