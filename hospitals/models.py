@@ -11,6 +11,9 @@ class Hospital(models.Model):
     name = models.CharField(max_length=50)
     location = models.PointField()
 
+    def __str__(self):
+        return self.name
+
 
 
 
@@ -32,4 +35,7 @@ class AppointmentSlot(models.Model):
 
     # Identify the hospital associated with the slot.
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.hospital) + str(self.start) + str(self.end)
 
