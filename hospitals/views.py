@@ -8,3 +8,6 @@ from .serializers import HospitalSerializer
 class HospitalView(viewsets.ModelViewSet):
     queryset = Hospital.objects.all()
     serializer_class = HospitalSerializer
+
+
+

@@ -34,7 +34,7 @@ class AppointmentSlot(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
 
     # Identify the hospital associated with the slot.
-    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    hospital = models.ForeignKey(Hospital, related_name="appointment_slots", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.hospital) + str(self.start) + str(self.end)
