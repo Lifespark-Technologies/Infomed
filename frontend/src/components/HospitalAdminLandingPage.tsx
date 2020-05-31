@@ -5,6 +5,8 @@ import AppointmentSchedule from './AppointmentSchedule'
 import { fetchAppointmentSlots, AppointmentSlot } from '../apis/infomed'
 import { startOfWeek, endOfWeek } from 'date-fns'
 import { useParams } from 'react-router-dom'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
 
 interface HospitalAdminLandingPageProps {
   hospitalId: string
@@ -27,11 +29,11 @@ export const HospitalAdminLandingPage = ({ hospitalId }: HospitalAdminLandingPag
   }, [focusedDate])
 
   return (
-    <div>
+    <Container>
       <HospitalDetailTop />
       <HospitalAdminDetail onDateChange={onSmallCalendarDateChange} />
       <AppointmentSchedule date={focusedDate} appointmentSlots={visibleSlots} />
-    </div>
+    </Container>
   )
 }
 
