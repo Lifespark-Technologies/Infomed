@@ -5,6 +5,8 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card';
 import styles from './HospitalAdminDetail.module.css';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 interface HospitalAdminDetailProps {
   onDateChange?: (date: Date | Date[]) => void;
@@ -15,11 +17,11 @@ export default ({ onDateChange }: HospitalAdminDetailProps) => (
     <Col md="5">
       <Card bg="light" className="shadow">
         <Card.Body>
-          <input type="text" placeholder="Insert six digit code" />
-          <br />
-          <button>Join Visit</button>
-          <br />
-          <button>Upload results</button>
+          <Form.Group>
+            <Form.Control type="text" placeholder="Insert six digit code" />
+          </Form.Group>
+          <Button block>Join Visit</Button>
+          <Button block> results</Button>
         </Card.Body>
       </Card>
     </Col>
