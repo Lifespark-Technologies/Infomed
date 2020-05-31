@@ -15,7 +15,7 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
-              <Route path="/hospital/detail">
+              <Route path="/hospitals/:hospitalId/admin">
                 <HospitalAdminLandingPage />
               </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">

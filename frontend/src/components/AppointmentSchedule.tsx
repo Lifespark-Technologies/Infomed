@@ -4,6 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import styles from './AppointmentSchedule.module.css'
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enGB } from 'date-fns/locale';
+import { AppointmentSlot } from '../apis/infomed';
 
 const localizer = dateFnsLocalizer({
   format,
@@ -15,22 +16,17 @@ const localizer = dateFnsLocalizer({
 
 interface AppointmentScheduleProps {
   date: Date
+  appointmentSlots: readonly AppointmentSlot[]
 }
 
-export default ({ date }: AppointmentScheduleProps) => {
+export default ({ date, appointmentSlots }: AppointmentScheduleProps) => {
 
   return (
     <div className={styles.schedule_container}>
       <Calendar
         localizer={localizer}
-        events={[
-          {
-            'title': 'My event',
-            'allDay': false,
-            'start': new Date(2020, 4, 18, 8, 0),
-            'end': new Date(2020, 4, 18, 14, 0)
-          }
-        ]}
+        events={[...appointmentSlots]}
+        formats={{eventTimeRangeFormat: () => ''}}  // Don't display event times at all.
         step={60}
         defaultView='week'
         views={['week']}
