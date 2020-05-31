@@ -57,3 +57,86 @@ const wait = (delay: number) => new Promise((resolve, reject) => {
     resolve();
   }, delay);
 });
+
+export interface HospitalInventory {
+  resourceType: string;
+  total?: number;
+  available?: number;
+  unit?: string;
+}
+
+export const fetchHospitalInventory  = async (hospitalId: string) => {
+  await wait(1000);
+
+  return [{
+    resourceType: "Hospital Bed Occupancy",
+    // total: 4,s
+    // available: 43
+  }, {
+    resourceType: "Number of Ventilators available",
+    total: 4,
+    available: 5,
+    unit: 'kg'
+  }, {
+    resourceType: "N95 Masks",
+    total: 4,
+    available: 7
+  }, {
+    resourceType: "3 Layer Mask",
+    total: 76,
+    available: 34
+  }, {
+    resourceType: "PPE Kit",
+    total: 6,
+    available: 11
+  }, {
+    resourceType: "Sanitizer",
+    total: 8,
+    available: 13
+  }, {
+    resourceType: "Bleaching Powder",
+    total: 0,
+    available: 8,
+    unit: 'mg'
+  }, {
+    resourceType: "Sodium Hypochlorite",
+    total: 4,
+    available: 14
+  }, {
+    resourceType: "Chemical Gloves",
+    total: 4,
+    available: 10
+  }, {
+    resourceType: "Infrared Thermometer",
+    total: 4,
+    available: 8
+  }, {
+    resourceType: "Handwash",
+    total: 4,
+    available: 5
+  }, {
+    resourceType: "Viral Transport Medium",
+    total: 4,
+    available: 23,
+    unit: 'g'
+  }, {
+    resourceType: "Swap Sticks",
+    total: 4,
+    available: 73
+  }, {
+    resourceType: "3 Layer packing Mask",
+    total: 4,
+    available: 3,
+    unit: 'tonne'
+  }, {
+    resourceType: "Ice Gel Pack",
+    total: 4,
+    // available: 63,
+    unit: 'MT'
+    
+  }, {
+    resourceType: "Handwash",
+    total: 4,
+    available: 65
+  }];
+}
