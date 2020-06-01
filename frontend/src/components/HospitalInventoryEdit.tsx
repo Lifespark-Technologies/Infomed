@@ -1,12 +1,15 @@
 import React from 'react'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
 // import countryList from 'react-select-country-list'
 
 export default () => {
 
   return (
-    <div>
+    <Row>
+      <Col>
       <Form>
         <h5>Address</h5>
         <Form.Row>
@@ -23,13 +26,22 @@ export default () => {
           </Form.Group>
         </Form.Row>
         <Form.Row>
-          <Form.Group as={Col}>
+          <Form.Group as={Col} xs={8} md={6}>
             <Form.Control as="select">
               <option>1</option>
             </Form.Control>
           </Form.Group>
         </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} xs={8} md={6}>
+          <Button variant="outline-primary" size="lg" block>Update Info</Button>{' '}
+          </Form.Group>
+        </Form.Row>
       </Form>
-    </div>
+      </Col>
+      <Row>
+        
+      </Row>
+    </Row>
   )
 }
