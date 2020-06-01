@@ -2,6 +2,10 @@
 
 Web portal that enables communication between hospitals and health authorities
 
+# Technical overview
+
+This project contains a Python server built using Django. It contains an API layer that connects to a PostgresSQL database. The frontend is a single-page app built using React, and it's contained in the `frontend` directory. We use Bootstrap for layouts. We don't (yet?) need Redux, and we try to keep things simple there. No server-side rendering is currently considered, but it may be in the future.
+
 # Contributing
 
 ## Read these first
