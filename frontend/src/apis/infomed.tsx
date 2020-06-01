@@ -57,3 +57,22 @@ const wait = (delay: number) => new Promise((resolve, reject) => {
     resolve();
   }, delay);
 });
+
+export const hospitalInventoryList = [
+  'Ventilators',
+  'N95 masks',
+  'Rubbing Alcohol',
+  'Ice gel pack',
+  '3 layer packing kit',
+  'Swap sticks',
+  'VTM',
+  'Handwash',
+  'Adult ICU',
+  '3 Layer Mask',
+  'PPE Kits',
+  'Sanitizer',
+  'Bleaching Powder',
+  'Sodium Hypochloride',
+  'Chemical Gloves',
+  'Infrared Thermometer'
+];

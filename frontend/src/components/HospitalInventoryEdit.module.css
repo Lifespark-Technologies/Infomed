@@ -1,0 +1,10 @@
+.inventoryInput {
+  /* width: 100%!important; */
+  text-align: center;
+}
+
+.inputCard {
+  border: none!important;
+  /* width: 11%; */
+  margin: 0 2px;
+}
