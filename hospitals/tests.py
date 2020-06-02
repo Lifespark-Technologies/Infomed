@@ -29,6 +29,9 @@ class HospitalTestCase(TestCase):
 
 
     def test_get_hospital_location(self):
+        """
+        Just ensuring we're able to successfully query the DB and get the object's location.
+        """
         h1 = Hospital.objects.get(name="TestHospital1")
         h2 = Hospital.objects.get(name="TestHospital2")
 
@@ -38,6 +41,9 @@ class HospitalTestCase(TestCase):
         self.assertEqual(h2.location.y, 30)
 
     def test_get_hospital_name(self):
+        """
+        Ensuring successful DB query to obtain name.
+        """
         h1 = Hospital.objects.get(location="Point(5 23)")
         h2 = Hospital.objects.get(location="Point(8 30)")
 

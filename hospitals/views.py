@@ -14,6 +14,12 @@ class HospitalView(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["get"])
     def appointmentSlots(self, request, pk):
+        """
+        Routes get requests with a pk associated with a hospital to this endpoint.
+        This obtains hospitals in the database and returns the ones that are 
+        within the specified timeframe. The URL to access this endpoint is 
+        specified in the gist: https://gist.github.com/bl-nero/6354aeabf46f601ac6a9581b00ba377d.
+        """
         hospital = self.get_object()
         appointments = hospital.appointment_slots.all()
 
