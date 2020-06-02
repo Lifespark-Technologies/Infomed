@@ -44,16 +44,5 @@ class HospitalTestCase(TestCase):
         self.assertEqual(h1.name, "TestHospital1")
         self.assertEqual(h2.name, "TestHospital2")
 
-    def test_appointment_chronology(self):
-        """
-        This test should ensure that the serializer doesn't save appointments where the start date 
-        comes after the end date.
-        """
-        try:
-            # Perform the logic where we send a POST request here...?
-            self.factory.post("/apis/hospitals/{pk}/appointmentSlots/", {"start": self.end1, "end": self.start1, "status": "available"})
-            self.fail("ValidationError not called.")
-        except ValidationError as e:
-            self.assertEqual(True, True)
 
 

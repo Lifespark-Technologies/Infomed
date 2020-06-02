@@ -8,15 +8,6 @@ class AppointmentSlotSerializer(serializers.ModelSerializer):
         model = AppointmentSlot
         fields = ("start", "end", "status")
 
-    def validate(self, data):
-        """
-        Ensure that the start date comes before the end date.
-        """
-        if data["start"] > data["end"]:
-            raise ValidationError("The start date must come before the end date.")
-
-        return data
-
 
 class HospitalSerializer(serializers.GeoFeatureModelSerializer):
 
