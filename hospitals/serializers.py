@@ -1,5 +1,6 @@
 from rest_framework_gis import serializers
 from .models import Hospital, AppointmentSlot
+from django.core.exceptions import ValidationError
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
@@ -7,6 +8,14 @@ class AppointmentSlotSerializer(serializers.ModelSerializer):
         model = AppointmentSlot
         fields = ("start", "end", "status")
 
+    def validate(self, data):
+        """
+        Ensure that the start date comes before the end date.
+        """
+        if data["start"] > data["end"]:
+            raise ValidationError("The start date must come before the end date.")
+
+        return data
 
 
 class HospitalSerializer(serializers.GeoFeatureModelSerializer):

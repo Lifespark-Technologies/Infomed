@@ -25,7 +25,7 @@ class HospitalView(viewsets.ModelViewSet):
             end = dateutil.parser.parse(request.query_params["end"])
 
             for appointment in appointments:
-                if appointment.start.day >= start.day and appointment.end.day <= end.day:
+                if appointment.start >= start and appointment.end <= end:
                     valid_appointments.append(appointment)
 
         else:
