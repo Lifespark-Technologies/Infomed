@@ -27,6 +27,9 @@ class App extends React.Component {
               <Route path="/hospitals/:hospitalId/inventory">
                 <HospitalInventoryList />
               </Route>
+              <Route path="/hospitals/:hospitalId/edit">
+                <HospitalInventoryEdit />
+              </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
               </Route>

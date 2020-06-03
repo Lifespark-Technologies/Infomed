@@ -58,24 +58,6 @@ const wait = (delay: number) => new Promise((resolve, reject) => {
   }, delay);
 });
 
-export const hospitalInventoryList = [
-  'Ventilators',
-  'N95 masks',
-  'Rubbing Alcohol',
-  'Ice gel pack',
-  '3 layer packing kit',
-  'Swap sticks',
-  'VTM',
-  'Handwash',
-  'Adult ICU',
-  '3 Layer Mask',
-  'PPE Kits',
-  'Sanitizer',
-  'Bleaching Powder',
-  'Sodium Hypochloride',
-  'Chemical Gloves',
-  'Infrared Thermometer'
-];
 export interface HospitalInventory {
   resourceType: string;
   total?: number;
@@ -151,10 +133,23 @@ export const fetchHospitalInventory  = async (hospitalId: string) => {
     total: 4,
     // available: 63,
     unit: 'MT'
-    
-  }, {
-    resourceType: "Handwash",
-    total: 4,
-    available: 65
   }];
+}
+
+export interface HospitalAddress {
+  street: string;
+  city: string;
+  zip: number;
+  country: string;
+}
+
+export const fetchHospitalAddress = async (hospitalId: string) => {
+  return [
+    {
+      street: '10 Delhi House Mumbai India',
+      city: 'dehli',
+      zip: 123456,
+      country: ''
+    }
+  ]
 }

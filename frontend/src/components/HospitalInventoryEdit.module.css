@@ -1,10 +1,14 @@
 .inventoryInput {
-  /* width: 100%!important; */
+  /* width: 40%!important; */
   text-align: center;
 }
 
 .inputCard {
   border: none!important;
-  /* width: 11%; */
+  /* width: 160px; */
   margin: 0 2px;
+}
+
+.containerDiv {
+  margin: 0 10%;
 }
