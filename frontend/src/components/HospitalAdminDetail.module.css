@@ -1,0 +1,4 @@
+.calendarCard :global .react-calendar {
+  background: transparent;
+  border: none;
+}
