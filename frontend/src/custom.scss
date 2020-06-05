@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+$theme-colors: (
+  "primary": $purple,
+  "light": $gray-200,
+);
+
+$enable-shadows: true;
+$card-border-width: 0;
+
+@import "~bootstrap/scss/bootstrap";
