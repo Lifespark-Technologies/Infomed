@@ -1,4 +1,4 @@
-import { isBefore, addHours, addMinutes } from "date-fns";
+import { isBefore, addHours, addMinutes, parseISO } from "date-fns";
 
 export interface GeoCoordinates {
   readonly lat: number;
@@ -34,16 +34,24 @@ export interface AppointmentSlot {
 }
 
 export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end: Date): Promise<AppointmentSlot[]> => {
-  await wait(1000);
+  const response = await fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`);
+  const results = await response.json();
+  return results.map(({start, end}: any) => {
+    return {
+      start: parseISO(start),
+      end: parseISO(end),
+    };
+  });
+  // await wait(1000);
 
-  const slots = [];
-  for (let current = new Date(start.getTime()); isBefore(current, end); current = addHours(current, 1)) {
-    slots.push({
-      start: current,
-      end: addMinutes(current, 30),
-    });
-  }
-  return slots;
+  // const slots = [];
+  // for (let current = new Date(start.getTime()); isBefore(current, end); current = addHours(current, 1)) {
+  //   slots.push({
+  //     start: current,
+  //     end: addMinutes(current, 30),
+  //   });
+  // }
+  // return slots;
 };
 
 export const scheduleAppointment = async (
