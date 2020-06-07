@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'frontend',
     'rest_framework',
-    'django.contrib.gis'
+    'django.contrib.gis',
+    'hospitals',
+    'rest_framework_gis',
+    'django_extensions' # Installed for quicker development
 ]
 
 MIDDLEWARE = [

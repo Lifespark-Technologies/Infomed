@@ -5,7 +5,7 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
-import HospitalDetail from './components/HospitalDetail'
+import HospitalAdminLandingPage from './components/HospitalAdminLandingPage'
 import HospitalList from './components/HospitalList'
 import HospitalInventoryEdit from './components/HospitalInventoryEdit'
 import HospitalInventoryList from './components/HospitalInventoryList'
@@ -18,11 +18,8 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
-              <Route path="/hospital/list">
-                <HospitalList />
-              </Route>
-              <Route path="/hospital/detail">
-                <HospitalDetail />
+              <Route path="/hospitals/:hospitalId/admin">
+                <HospitalAdminLandingPage />
               </Route>
               <Route path="/hospitals/:hospitalId/inventory">
                 <HospitalInventoryList />
@@ -32,6 +29,9 @@ class App extends React.Component {
               </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
+              </Route>
+              <Route path="/hospitals">
+                <HospitalList />
               </Route>
               <Route path="/">
                 <HospitalSearch />

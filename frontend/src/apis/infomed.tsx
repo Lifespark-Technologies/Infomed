@@ -6,7 +6,7 @@ export interface GeoCoordinates {
 }
 
 export interface HospitalResponse {
-  id: string;
+  readonly id: string;
   readonly name: string;
   readonly coords: GeoCoordinates;
   readonly admissionFormLink: string;
@@ -29,8 +29,8 @@ export const searchForHospitals = async (name: string, near: GeoCoordinates): Pr
 };
 
 export interface AppointmentSlot {
-  start: Date;
-  end: Date;
+  readonly start: Date;
+  readonly end: Date;
 }
 
 export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end: Date): Promise<AppointmentSlot[]> => {
