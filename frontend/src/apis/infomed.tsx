@@ -137,19 +137,17 @@ export const fetchHospitalInventory  = async (hospitalId: string) => {
 }
 
 export interface HospitalAddress {
-  street: string;
-  city: string;
-  zip: number;
-  country: string;
+  street?: string;
+  city?: string;
+  zip?: number;
+  country?: string;
 }
 
 export const fetchHospitalAddress = async (hospitalId: string) => {
-  return [
-    {
+  return {
       street: '10 Delhi House Mumbai India',
       city: 'dehli',
       zip: 123456,
       country: ''
-    }
-  ]
+  }
 }

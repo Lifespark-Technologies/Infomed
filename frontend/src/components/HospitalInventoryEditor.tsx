@@ -3,8 +3,8 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import { format } from 'date-fns'
 import { useParams } from 'react-router-dom'
-import style from './HospitalInventoryEdit.module.css'
 import { HospitalInventory, HospitalAddress, fetchHospitalInventory, fetchHospitalAddress } from '../apis/infomed'
 
 
@@ -12,40 +12,39 @@ interface HospitalInventoryParams {
   hospitalId: string
 }
 
-export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => {
+export const HospitalInventoryEditor = ({hospitalId}: HospitalInventoryParams) => {
 
   const [inventoryList, setInventoryList] = useState<HospitalInventory[]>([]);
-  const [hospitalAddress, setHospitalAddress] = useState<HospitalAddress[]>([]);
+  const [hospitalAddress, setHospitalAddress] = useState<HospitalAddress>({});
 
   useEffect(() => {
     (async () => {
-      const list = await fetchHospitalInventory(hospitalId);
+      const [list, address] = await Promise.all([
+        fetchHospitalInventory(hospitalId),
+        fetchHospitalAddress(hospitalId)
+      ])
       setInventoryList(list);
-      
-      const address = await fetchHospitalAddress(hospitalId);
       setHospitalAddress(address);
     })();
   }, [hospitalId]);
 
-  const handleInventoryChange  = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const updateList = [...inventoryList];
-    const target = e.target.getAttribute("data-index");
-    const dataIndex = parseInt(target !== null ? target : '0');
-    updateList[dataIndex]["available"] = parseInt(e.currentTarget.value);
-    setInventoryList(updateList);
+  const handleInventoryChange  = (index: number, e: React.ChangeEvent<HTMLInputElement>): void => {
+    const updatedList = [...inventoryList];
+    updatedList[index].available = parseInt(e.currentTarget.value);
+    setInventoryList(updatedList);
   }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const updateAddress = [...hospitalAddress];
+    const updatedAddress = {...hospitalAddress};
     const inputName = e.currentTarget.name;
     const value = e.currentTarget.value;
 
-    if (inputName === 'zip') updateAddress[0][inputName] = parseInt(value);
+    if (inputName === 'zip') updatedAddress[inputName] = parseInt(value);
 
     if (inputName === 'city' || inputName === 'street' || inputName === 'country') 
-      updateAddress[0][inputName] = value;
+      updatedAddress[inputName] = value;
   
-    setHospitalAddress(updateAddress);
+    setHospitalAddress(updatedAddress);
   }
 
   const updateInventoryList = () => {
@@ -57,7 +56,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
   }
 
   return (
-    <div className={style.containerDiv}>
+    <div className="mx-5">
       <Form>
         <h5>Address</h5>
         <Form.Row>
@@ -66,7 +65,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
               type="text" 
               placeholder="street" 
               name="street"
-              value={hospitalAddress[0] ? hospitalAddress[0].street : ''}
+              value={hospitalAddress.street || ''}
               onChange={handleAddressChange}
             />
           </Form.Group>
@@ -77,7 +76,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
               type="text" 
               placeholder="city" 
               name="city"
-              value={hospitalAddress[0] ? hospitalAddress[0].city : ''}
+              value={hospitalAddress.city || ''}
               onChange={handleAddressChange}
             />
           </Form.Group>
@@ -86,7 +85,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
               type="number" 
               placeholder="zip" 
               name="zip"
-              value={hospitalAddress[0] ? hospitalAddress[0].zip : ''}
+              value={hospitalAddress.zip || ''}
               onChange={handleAddressChange}
             />
           </Form.Group>
@@ -95,7 +94,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
           <Form.Group as={Col} xs={8} md={6}>
             <Form.Control as="select" 
               name="country"
-              value={hospitalAddress[0] ? hospitalAddress[0].country : ''}
+              value={hospitalAddress.country || ''}
               onChange={handleAddressChange}
             >
               <option value="India">India</option>
@@ -111,32 +110,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
               onClick={updateHospitalAddress}
             >
               Update Info
-            </Button>{' '}
-          </Form.Group>
-        </Form.Row>
-      </Form>
-
-      <Form>
-        <Form.Row>
-          <Form.Label>Filter By:</Form.Label>
-          <Form.Group as={Col} controlId="formGridState">
-            <Form.Control as="select" value="Choose...">
-              <option>State</option>
-              <option>...</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group as={Col} controlId="formGridState">
-            <Form.Control as="select" value="Choose...">
-              <option>District</option>
-              <option>...</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group as={Col} controlId="formGridState">
-            <Form.Control as="select" value="Choose...">
-              <option>India</option>
-            </Form.Control>
+            </Button>
           </Form.Group>
         </Form.Row>
       </Form>
@@ -144,25 +118,26 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
       <Form>
         <h5>Fortis Hospital</h5>
         <Form.Text className="text-muted">
-          1 June 2020, 05:14:33am
+          {format(new Date(), 'do MMMM yyyy, hh:mm:ss a' )}
         </Form.Text>
         <Form.Row>
           {inventoryList.map((item, index) => (
             <Card 
-              className={`text-center ${style.inputCard}`}
-              key={item.resourceType} >
-                <Form.Text>
-                  <strong>{item.resourceType}</strong>
-                </Form.Text>
-                <Form.Group>
-                  <Form.Control
-                    type="number"
-                    className={style.inventoryInput}
-                    data-index={index}
-                    value={item.available ? item.available : 0}
-                    onChange={handleInventoryChange}
-                  />
-                </Form.Group>
+              className="text-center mx-1"
+              key={item.resourceType} 
+            >
+              <Form.Text>
+                <strong>{item.resourceType}</strong>
+              </Form.Text>
+              <Form.Group>
+                <Form.Control
+                  type="number"
+                  className="text-center"
+                  data-index={index}
+                  value={item.available ? item.available : 0}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInventoryChange(index, e)}
+                />
+              </Form.Group>
             </Card>
           ))}
         </Form.Row>
@@ -176,7 +151,7 @@ export const HospitalInventoryEdit = ({hospitalId}: HospitalInventoryParams) => 
               onClick={updateInventoryList}
             >
               Update Inventory
-            </Button>{' '}
+            </Button>
           </Form.Group>
           <Form.Label column md={2}></Form.Label>
         </Form.Row>
@@ -189,6 +164,6 @@ export default () => {
   const { hospitalId } = useParams();
 
   return (
-    <HospitalInventoryEdit hospitalId={hospitalId}/>
+    <HospitalInventoryEditor hospitalId={hospitalId}/>
   )
 }

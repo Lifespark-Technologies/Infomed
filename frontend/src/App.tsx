@@ -7,7 +7,7 @@ import HospitalSearch from './components/HospitalSearch';
 import AppointmentScheduler from './components/AppointmentScheduler';
 import HospitalAdminLandingPage from './components/HospitalAdminLandingPage'
 import HospitalList from './components/HospitalList'
-import HospitalInventoryEdit from './components/HospitalInventoryEdit'
+import HospitalInventoryEditor from './components/HospitalInventoryEditor'
 import HospitalInventoryList from './components/HospitalInventoryList'
 
 class App extends React.Component {
@@ -25,7 +25,7 @@ class App extends React.Component {
                 <HospitalInventoryList />
               </Route>
               <Route path="/hospitals/:hospitalId/edit">
-                <HospitalInventoryEdit />
+                <HospitalInventoryEditor />
               </Route>
               <Route path="/hospitals/:hospitalId/book-appointment">
                 <AppointmentScheduler />
