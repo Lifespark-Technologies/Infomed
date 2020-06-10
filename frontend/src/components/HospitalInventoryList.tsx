@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {HospitalInventory, fetchHospitalInventory} from '../apis/infomed'
+import { HospitalInventory, fetchHospitalInventory } from '../apis/infomed'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Badge from 'react-bootstrap/Badge'
 import Row from 'react-bootstrap/Row'
