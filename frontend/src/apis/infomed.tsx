@@ -1,4 +1,4 @@
-import { isBefore, addHours, addMinutes, parseISO } from "date-fns";
+import { parseISO, formatISO } from "date-fns";
 
 export interface GeoCoordinates {
   readonly lat: number;
@@ -33,31 +33,39 @@ export interface AppointmentSlot {
   readonly end: Date;
 }
 
+interface AppointmentSlotJson {
+  readonly start: string;
+  readonly end: string;
+}
+
 export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end: Date): Promise<AppointmentSlot[]> => {
-  const response = await fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`);
-  const results = await response.json();
-  return results.map(({start, end}: any) => {
+  const startEnc = encodeURIComponent(formatISO(start));
+  const endEnc = encodeURIComponent(formatISO(end));
+  const hospitalIdEnc = encodeURIComponent(hospitalId);
+  const query = `start=${startEnc}&end=${endEnc}`;
+  const response = await fetch(
+    `/apis/hospitals/${hospitalIdEnc}/appointmentSlots?${query}`);
+  const results = await response.json() as AppointmentSlotJson[];
+  return results.map(({ start, end }: AppointmentSlotJson) => {
     return {
       start: parseISO(start),
       end: parseISO(end),
     };
   });
-  // await wait(1000);
-
-  // const slots = [];
-  // for (let current = new Date(start.getTime()); isBefore(current, end); current = addHours(current, 1)) {
-  //   slots.push({
-  //     start: current,
-  //     end: addMinutes(current, 30),
-  //   });
-  // }
-  // return slots;
 };
 
 export const scheduleAppointment = async (
-  hospitalId: string, startDate: Date, email: string
+  hospitalId: string, start: Date, email: string
 ) => {
-  await wait(2000);
+  fetch('/apis/hospital/1/schedule-appointment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      hospitalId,
+      start: formatISO(start),
+      email,
+    }),
+  });
 };
 
 const wait = (delay: number) => new Promise((resolve, reject) => {
@@ -73,7 +81,7 @@ export interface HospitalInventory {
   unit?: string;
 }
 
-export const fetchHospitalInventory  = async (hospitalId: string) => {
+export const fetchHospitalInventory = async (hospitalId: string) => {
   await wait(1000);
 
   return [{
@@ -141,7 +149,7 @@ export const fetchHospitalInventory  = async (hospitalId: string) => {
     total: 4,
     // available: 63,
     unit: 'MT'
-    
+
   }, {
     resourceType: "Handwash",
     total: 4,

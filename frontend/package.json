@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "TZ=GMT react-scripts test",
     "eject": "react-scripts eject",
     "dev": "webpack --mode development ./src/index.tsx --output ./static/frontend/main.js"
   },
@@ -49,12 +49,16 @@
   },
   "devDependencies": {
     "@testing-library/user-event": "^7.2.1",
+    "@types/fetch-mock": "^7.3.2",
     "@types/react-router-dom": "^5.1.5",
+    "fetch-mock": "^9.10.1",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "jest-date-mock": "^1.0.8",
+    "node-fetch": "^2.6.0",
     "node-sass": "^4.14.1",
     "ts-jest": "^25.4.0",
     "webpack-cli": "^3.3.11"
-  }
+  },
+  "proxy": "http://localhost:8000"
 }
