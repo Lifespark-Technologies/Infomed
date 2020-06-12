@@ -18,6 +18,9 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
+              <Route>
+                <LoginAndRegisteration />
+              </Route>
               <Route path="/hospitals/:hospitalId/admin">
                 <HospitalAdminLandingPage />
               </Route>
@@ -29,9 +32,6 @@ class App extends React.Component {
               </Route>
               <Route path="/hospitals">
                 <HospitalList />
-              </Route>
-              <Route path="/login">
-                <LoginAndRegisteration />
               </Route>
               <Route path="/">
                 <HospitalSearch />
