@@ -89,3 +89,15 @@ Docker, then this will also set up the Postgres Docker container, with the usern
 server serves to the user. This can be done manually or by running this script. This script also copies the `infomed/example.env` into `infomed/.env`, which is sufficient, but SHOULD NOT BE USED WHEN DEPLOYED IN PRODUCTION. That file contains the database username, password, and secret keys which SHOULD BE CHANGED before we deploy. To do so, copy `infomed/example.env` into `infomed/.env` and modify manually the `.env` file.
 8. After you have completed the previous steps, you can test subsequent iterations just by running `python manage.py runserver`.
 
+# API Documentation
+The backend is structured as follows:
+The hospital database table is stored with the Hospital model in the hospitals application.
+This model currently has two fields: a name field and a location field. 
+Calls to the API endpoint are routed through the `views.py` file. 
+This is done by inheriting from the Django Rest Framework `ModelViewset` class, which has prewritten endpoints
+for HTTP `GET`, `POST`, `PUT`, etc. More information can be found here:
+[https://www.django-rest-framework.org/api-guide/viewsets/.] We also use DRF serializers to serialize our Python objects.
+Our serializers inherit from the `ModelSerializer` class in the DRF as well as the `GeoFeatureModelSerializer` class, an add-on to the 
+rest framework. The `GeoFeatureModelSerializer` is used to serialize geometries.
+Finally, we use a DRF router to generate all our URLs in `router.py`. Finally, we can write unit tests to test our API in `tests.py`.
+
