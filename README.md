@@ -91,13 +91,15 @@ server serves to the user. This can be done manually or by running this script. 
 
 # API Documentation
 The backend is structured as follows:
-The hospital database table is stored with the Hospital model in the hospitals application.
-This model currently has two fields: a name field and a location field. 
-Calls to the API endpoint are routed through the `views.py` file. 
-This is done by inheriting from the Django Rest Framework `ModelViewset` class, which has prewritten endpoints
+* The hospital database table is stored with the Hospital model in the hospitals application.
+* This model currently has two fields: a name field and a location field. 
+* Calls to the API endpoint are routed through the `views.py` file. 
+* This is done by inheriting from the Django Rest Framework `ModelViewset` class, which has prewritten endpoints
 for HTTP `GET`, `POST`, `PUT`, etc. More information can be found here:
-[https://www.django-rest-framework.org/api-guide/viewsets/.] We also use DRF serializers to serialize our Python objects.
-Our serializers inherit from the `ModelSerializer` class in the DRF as well as the `GeoFeatureModelSerializer` class, an add-on to the 
-rest framework. The `GeoFeatureModelSerializer` is used to serialize geometries.
-Finally, we use a DRF router to generate all our URLs in `router.py`. Finally, we can write unit tests to test our API in `tests.py`.
+[https://www.django-rest-framework.org/api-guide/viewsets/.] 
+* We also use DRF serializers to serialize our Python objects.
+* Our serializers inherit from the `ModelSerializer` class in the DRF as well as the `GeoFeatureModelSerializer` class, an add-on to the 
+rest framework. 
+* The `GeoFeatureModelSerializer` is used to serialize geometries.
+* Finally, we use a DRF router to generate all our URLs in `router.py`. Finally, we can write unit tests to test our API in `tests.py`.
 
