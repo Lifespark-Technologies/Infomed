@@ -9,20 +9,22 @@ export default () => {
   return (
     <Form>
       <Form.Row>
-        <Form.Label>Email</Form.Label>
+        <Form.Label >Email</Form.Label>
         <FormControl
+          className="font-weight-light"
           type="email"
           placeholder="email"
         />
       </Form.Row>
-      <Form.Row>
-        <Form.Label>Password</Form.Label>
+      <Form.Row className="mt-3">
+        <Form.Label >Password</Form.Label>
         <FormControl 
+          className="font-weight-light"
           type="password"
           placeholder="password"
         />
       </Form.Row>
-      <Button variant="primary" type="submit" >
+      <Button className="mt-3" variant="primary" type="submit" >
         Login
       </Button>
     </Form>

@@ -7,36 +7,41 @@ import Tabs from 'react-bootstrap/Tabs'
 import Container from 'react-bootstrap/Container'
 import TabContainer from 'react-bootstrap/TabContainer'
 import Login from './Login'
-import Registeration from './Registeration'
+import Registration from './Registration'
+import style from './LoginAndRegistration.module.css'
 
 
 
 export default () => {
 
   return (
-    <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-      <Row>
-        <Col sm={3}>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Item>
-              <Nav.Link eventKey="first">Tab 1</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="second">Tab 2</Nav.Link>
-            </Nav.Item>
-          </Nav>
-        </Col>
-        <Col sm={9}>
-          <Tab.Content>
-            <Tab.Pane eventKey="first">
-              <Login />
-            </Tab.Pane>
-            <Tab.Pane eventKey="second">
-              <Registeration />
-            </Tab.Pane>
-          </Tab.Content>
-        </Col>
-      </Row>
-    </Tab.Container>
+    <div className="text-center">
+      <div className={`${style.topDiv} border border-top-0 rounded-top`}>
+        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+          <Row className="ml-1 mr-1">
+            <Nav variant="pills" className="w-100">
+              <Nav.Item className="w-50">
+                <Nav.Link eventKey="first">Login</Nav.Link>
+              </Nav.Item>
+              <Nav.Item className="w-50">
+                <Nav.Link eventKey="second">Registration</Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Row>
+          <Row>
+            <div className="text-center mx-auto my-auto">
+              <Tab.Content className="w-100">
+                <Tab.Pane eventKey="first" className="mt-5">
+                  <Login />
+                </Tab.Pane>
+                <Tab.Pane eventKey="second" className="mt-3">
+                  <Registration />
+                </Tab.Pane>
+              </Tab.Content>
+            </div>
+          </Row>
+        </Tab.Container>
+      </div>
+    </div>
   )
 }

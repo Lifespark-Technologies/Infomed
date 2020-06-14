@@ -19,7 +19,7 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
-              <Route>
+              <Route path="/auth">
                 <LoginAndRegisteration />
               </Route>
               <Route path="/hospitals/:hospitalId/admin">

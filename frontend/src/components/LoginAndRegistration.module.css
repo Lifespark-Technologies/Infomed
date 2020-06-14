@@ -1,0 +1,10 @@
+.topDiv {
+  width: 100%;
+  /* max-width: 330px; */
+  max-width: 50vw;
+  /* padding: 15px; */
+  margin: auto;
+  /* border: 1px solid grey;
+  border-radius: 20px; */
+  height: 70vh;
+}
