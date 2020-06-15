@@ -17,7 +17,27 @@ class HospitalMap extends React.Component {
     lng: -0.09,
     zoom: 13,
   }
-
+  componentDidMount() {
+    /**
+     * Issue: #12
+     * Title: Detect user's location and use it as a search parameter
+     */
+    if('geolocation' in navigator){ /*Check if browser supports Geolocation API */
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position.coords)
+        /**
+         * Update state with latest Latitude and longitudes
+         */
+        this.setState({
+          lat:position.coords.latitude,
+          lng:position.coords.longitude
+        })
+      },(err)=>console.error(`Error:: ${err.code} - ${err.message}`/*Error if user denies permission to access location */));
+    }
+    else{
+      console.error('Geolocation not supported by the browser.'); /*Error when browser doesn't support Geolocation API */
+    }
+  }
   render() {
     const position: L.LatLng = L.latLng(this.state.lat, this.state.lng);
     return (
