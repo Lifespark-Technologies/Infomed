@@ -1,14 +1,14 @@
-import React from 'react'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Nav from 'react-bootstrap/Nav'
-import Tab from 'react-bootstrap/Tab'
-import Tabs from 'react-bootstrap/Tabs'
-import Container from 'react-bootstrap/Container'
-import TabContainer from 'react-bootstrap/TabContainer'
-import Login from './Login'
-import Registration from './Registration'
-import style from './LoginAndRegistration.module.css'
+import React from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Nav from 'react-bootstrap/Nav';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import Container from 'react-bootstrap/Container';
+import TabContainer from 'react-bootstrap/TabContainer';
+import Login from './Login';
+import Registration from './Registration';
+import style from './LoginAndRegistration.module.css';
 
 
 
