@@ -5,32 +5,26 @@ import styles from './HospitalMap.module.css';
 
 
 type State = {
-  lat: number,
-  lng: number,
+  position: L.LatLng,
   zoom: number,
 }
 
 class HospitalMap extends React.Component {
 
   state: State = {
-    lat: 51.505,
-    lng: -0.09,
+    position:L.latLng(51.505, -0.09),
     zoom: 13,
   }
   componentDidMount() {
-    /**
+    /*
      * Issue: #12
      * Title: Detect user's location and use it as a search parameter
      */
     if('geolocation' in navigator){ /*Check if browser supports Geolocation API */
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position.coords)
-        /**
-         * Update state with latest Latitude and longitudes
-         */
+        //Update state with latest Latitude and longitudes
         this.setState({
-          lat:position.coords.latitude,
-          lng:position.coords.longitude
+          position:L.latLng(position.coords.latitude,position.coords.longitude)
         })
       },(err)=>console.error(`Error:: ${err.code} - ${err.message}`/*Error if user denies permission to access location */));
     }
@@ -39,7 +33,7 @@ class HospitalMap extends React.Component {
     }
   }
   render() {
-    const position: L.LatLng = L.latLng(this.state.lat, this.state.lng);
+    const { position } = this.state;
     return (
       <Map center={position} zoom={this.state.zoom} className={styles.map}>
         <TileLayer
