@@ -23,7 +23,7 @@ export const HospitalAdminLandingPage = ({ hospitalId }: HospitalAdminLandingPag
     (async () => {
       const start = startOfWeek(focusedDate);
       const end = endOfWeek(focusedDate);
-      const slots = await fetchAppointmentSlots(hospitalId, start, end)
+      const slots = await fetchAppointmentSlots('1', start, end)
       setVisibleSlots(slots)
     })()
   }, [focusedDate])
