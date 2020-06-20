@@ -1,4 +1,4 @@
-import { parseISO, formatISO } from "date-fns";
+import { parseISO, formatISO, formatISODuration } from "date-fns";
 
 export interface GeoCoordinates {
   readonly lat: number;
@@ -161,9 +161,23 @@ export interface HospitalAddress {
 
 export const fetchHospitalAddress = async (hospitalId: string) => {
   return {
-      street: '10 Delhi House Mumbai India',
-      city: 'dehli',
-      zip: 123456,
-      country: ''
+    street: '10 Delhi House Mumbai India',
+    city: 'dehli',
+    zip: 123456,
+    country: ''
   }
+}
+
+export const createTimeslots = (
+  hospitalId: string, start: Date, end: Date, slotLength: Duration
+) => {
+  fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      start: formatISO(start),
+      end: formatISO(end),
+      slotLength: formatISODuration(slotLength),
+    }),
+  })
 }
