@@ -4,6 +4,7 @@ import { AppointmentSlot, fetchAppointmentSlots, scheduleAppointment } from "../
 import AppointmentTimePicker from "./AppointmentTimePicker";
 import { format, isSameDay } from "date-fns";
 import { useParams } from "react-router-dom";
+import OTPVerification from './OTPVerification';
 
 /** 
  * Determines the stage of user's interaction with [[`AppointmentScheduler`]].
@@ -35,6 +36,7 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
   const [datePicked, setDatePicked] = useState(new Date());
   const [appointmentSlot, setAppointmentSlot] = useState<AppointmentSlot | null>(null);
   const [email, setEmail] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   // This effect is responsible for fetching available appointment slots from
   // the server.
@@ -56,9 +58,11 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
 
   // Once user confirms, schedule an appointment.
   const schedule = async () => {
+    setShowModal(!showModal);
     if (!appointmentSlot) {
       return;
     }
+    //call this after otp verifiction
     await scheduleAppointment(hospitalId, appointmentSlot.start, email);
     setStage(Stage.Confirmed);
   }
@@ -91,6 +95,7 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
         <button disabled={!appointmentSlot || !email} onClick={schedule}>
           Done
           </button>
+          <OTPVerification show={showModal} onHide={()=>setShowModal(false)} />
       </div>
     );
 
