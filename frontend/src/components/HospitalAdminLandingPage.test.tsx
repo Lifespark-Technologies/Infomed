@@ -1,7 +1,7 @@
 import { Calendar } from "react-big-calendar"
-import { act, fireEvent } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
 import { HospitalAdminLandingPage } from "./HospitalAdminLandingPage";
-import React, { ComponentType, Component } from "react";
+import React, { ComponentType, Component, ReactElement } from "react";
 import { advanceTo } from "jest-date-mock";
 import userEvent from "@testing-library/user-event";
 import { renderAsync } from "../testUtils";
@@ -22,28 +22,30 @@ beforeEach(() => {
   fetchMock
     .get(
       {
-        url: '/apis/hospitals/1/appointmentSlots',
-        query: { start: '2020-02-02T00:00:00Z', end: '2020-02-08T23:59:59Z', },
+        url: '/apis/hospitals/1/appointment-slots',
+        query: { since: '2020-02-02T00:00:00Z', until: '2020-02-08T23:59:59Z', },
       },
       [
-        { start: '2020-02-03T13:00:00Z', end: '2020-02-03T14:00:00Z' },
-        { start: '2020-02-03T15:30:00Z', end: '2020-02-03T15:45:00Z' },
-        { start: '2020-02-07T17:00:00Z', end: '2020-02-07T17:30:00Z' },
+        { id: '12', start: '2020-02-03T13:00:00Z', end: '2020-02-03T14:00:00Z' },
+        { id: '13', start: '2020-02-03T15:30:00Z', end: '2020-02-03T15:45:00Z' },
+        { id: '14', start: '2020-02-07T17:00:00Z', end: '2020-02-07T17:30:00Z' },
       ])
     .get(
       {
-        url: '/apis/hospitals/1/appointmentSlots',
-        query: { start: '2020-02-16T00:00:00Z', end: '2020-02-22T23:59:59Z', },
+        url: '/apis/hospitals/1/appointment-slots',
+        query: { since: '2020-02-16T00:00:00Z', until: '2020-02-22T23:59:59Z', },
         overwriteRoutes: false,
       },
       [
-        { start: '2020-02-20T10:00:00Z', end: '2020-02-20T11:00:00Z' },
+        { id: '15', start: '2020-02-20T10:00:00Z', end: '2020-02-20T11:00:00Z' },
       ])
-    .get('path:/apis/hospitals/2/appointmentSlots', [
-      { start: '2020-02-06T10:00:00Z', end: '2020-02-06T11:00:00Z' },
+    .get('path:/apis/hospitals/2/appointment-slots', [
+      { id: '21', start: '2020-02-06T10:00:00Z', end: '2020-02-06T11:00:00Z' },
     ])
-    .post('/apis/hospitals/1/appointmentSlots', [])
-    .post('/apis/hospitals/2/appointmentSlots', []);
+    .post('/apis/hospitals/1/appointment-slots', [])
+    .post('/apis/hospitals/2/appointment-slots', [])
+    .delete('/apis/hospitals/1/appointment-slots/12', 200)
+    .delete('/apis/hospitals/1/appointment-slots/13', 200);
   MockCalendar.mockClear();
 })
 
@@ -58,9 +60,9 @@ test('fetches appointment slots and renders them on the big calendar', async () 
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 4),
     events: [
-      { start: new Date(2020, 1, 3, 13, 0), end: new Date(2020, 1, 3, 14, 0) },
-      { start: new Date(2020, 1, 3, 15, 30), end: new Date(2020, 1, 3, 15, 45) },
-      { start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30) },
+      { id: '12', start: new Date(2020, 1, 3, 13, 0), end: new Date(2020, 1, 3, 14, 0) },
+      { id: '13', start: new Date(2020, 1, 3, 15, 30), end: new Date(2020, 1, 3, 15, 45) },
+      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30) },
     ],
   })
 
@@ -68,7 +70,7 @@ test('fetches appointment slots and renders them on the big calendar', async () 
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 4),
     events: [
-      { start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
     ],
   })
 })
@@ -81,7 +83,7 @@ test('can switch weeks using the small calendar', async () => {
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 18),
     events: [
-      { start: new Date(2020, 1, 20, 10, 0), end: new Date(2020, 1, 20, 11, 0) },
+      { id: '15', start: new Date(2020, 1, 20, 10, 0), end: new Date(2020, 1, 20, 11, 0) },
     ],
   })
 })
@@ -127,7 +129,7 @@ test('can create appointment slots', async () => {
   await act(async () => getByRole('button', { name: 'Create slots' }).click());
 
   expect(queryByRole('button', { name: 'Create slots' })).not.toBeInTheDocument();
-  expect(fetchMock.called('/apis/hospitals/1/appointmentSlots', {
+  expect(fetchMock.called('/apis/hospitals/1/appointment-slots', {
     body: {
       start: '2020-02-05T12:00:00Z',
       end: '2020-02-05T18:00:00Z',
@@ -145,7 +147,7 @@ test('can create appointment slots', async () => {
   }))
   await act(async () => getByRole('button', { name: 'Create slots' }).click());
 
-  expect(fetchMock.called('/apis/hospitals/1/appointmentSlots', {
+  expect(fetchMock.called('/apis/hospitals/1/appointment-slots', {
     body: {
       start: '2020-02-06T14:00:00Z',
       end: '2020-02-06T17:30:00Z',
@@ -158,8 +160,8 @@ test('can create appointment slots', async () => {
 });
 
 test.each([
-  ['1', '/apis/hospitals/1/appointmentSlots'],
-  ['2', '/apis/hospitals/2/appointmentSlots'],
+  ['1', '/apis/hospitals/1/appointment-slots'],
+  ['2', '/apis/hospitals/2/appointment-slots'],
 ])('can create timeslots for hospital %s', async (hospitalId, endpointUrl) => {
   const { getByRole } = await renderAsync(
     <HospitalAdminLandingPage hospitalId={hospitalId} />
@@ -195,7 +197,7 @@ test('can customize appointment timeslot length', async () => {
   await act(async () =>
     userEvent.click(getByRole('button', { name: 'Create slots' })));
 
-  expect(fetchMock.called('/apis/hospitals/1/appointmentSlots', {
+  expect(fetchMock.called('/apis/hospitals/1/appointment-slots', {
     body: {
       start: '2020-02-05T13:00:00Z',
       end: '2020-02-05T17:00:00Z',
@@ -241,15 +243,15 @@ test('validates appointment timeslot length', async () => {
   expect(getByRole('button', { name: 'Create slots' })).toBeDisabled();
 });
 
-it('displays returned timeslots', async () => {
+test('displays returned timeslots', async () => {
   fetchMock.post(
     {
-      url: '/apis/hospitals/2/appointmentSlots',
+      url: '/apis/hospitals/2/appointment-slots',
       overwriteRoutes: true,
     },
     [
-      { start: '2020-02-05T12:00:00Z', end: '2020-02-05T12:15:00Z' },
-      { start: '2020-02-05T12:15:00Z', end: '2020-02-05T12:30:00Z' },
+      { id: '25', start: '2020-02-05T12:00:00Z', end: '2020-02-05T12:15:00Z' },
+      { id: '26', start: '2020-02-05T12:15:00Z', end: '2020-02-05T12:30:00Z' },
     ]
   );
 
@@ -268,19 +270,19 @@ it('displays returned timeslots', async () => {
 
   expectToBeRenderedWith(Calendar, {
     events: [
-      { start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
-      { start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
-      { start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
+      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
     ],
   });
 
   fetchMock.post(
     {
-      url: '/apis/hospitals/2/appointmentSlots',
+      url: '/apis/hospitals/2/appointment-slots',
       overwriteRoutes: true,
     },
     [
-      { start: '2020-02-07T14:00:00Z', end: '2020-02-07T14:15:00Z' },
+      { id: '27', start: '2020-02-07T14:00:00Z', end: '2020-02-07T14:15:00Z' },
     ]
   );
 
@@ -296,10 +298,56 @@ it('displays returned timeslots', async () => {
 
   expectToBeRenderedWith(Calendar, {
     events: [
-      { start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
-      { start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
-      { start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
-      { start: new Date(2020, 1, 7, 14, 0), end: new Date(2020, 1, 7, 14, 15) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
+      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
+      { id: '27', start: new Date(2020, 1, 7, 14, 0), end: new Date(2020, 1, 7, 14, 15) },
     ],
   });
+});
+
+test('deletes appointment slots', async () => {
+  const { getByRole, queryByRole } = await renderAsync(
+    <HospitalAdminLandingPage hospitalId="1" />
+  )
+
+  // Stupid react-big-calendar. This is a hack upon a hack. Not only we have to
+  // mock the entire thing, then we have to render the event title element
+  // separately. The title element contains the "delete" button, which we have
+  // to click. Also, since the TS type bindings for this library don't take into
+  // consideration that the title accessor can return a React element, we have
+  // to play with unnecessary type casting.
+  let { titleAccessor } = lastRenderedProps(MockCalendar)
+  let { getByRole: getTitleElementByRole } = render(titleAccessor!(
+    { id: '13', start: new Date(2020, 1, 3, 15, 30), end: new Date(2020, 1, 3, 15, 45) },
+  ) as unknown as ReactElement)
+  let deleteButton = getTitleElementByRole(
+    'button',
+    { name: 'Remove timeslot starting at February 3rd, 2020 at 3:30 PM' }
+  );
+  await act(async () => userEvent.click(deleteButton));
+
+  expect(fetchMock.called('/apis/hospitals/1/appointment-slots/13', {
+    method: 'DELETE'
+  })).toBe(true);
+
+  ({ titleAccessor } = lastRenderedProps(MockCalendar));
+  ({ getByRole: getTitleElementByRole } = render(titleAccessor!(
+    { id: '12', start: new Date(2020, 1, 3, 13, 0), end: new Date(2020, 1, 3, 14, 0) },
+  ) as unknown as ReactElement));
+  deleteButton = getTitleElementByRole(
+    'button',
+    { name: 'Remove timeslot starting at February 3rd, 2020 at 1:00 PM' }
+  );
+  MockCalendar.mockClear();
+  await act(async () => userEvent.click(deleteButton));
+
+  expect(fetchMock.called('/apis/hospitals/1/appointment-slots/12', {
+    method: 'DELETE'
+  })).toBe(true);
+  expectToBeRenderedWith(Calendar, {
+    events: [
+      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30) },
+    ],
+  })
 });

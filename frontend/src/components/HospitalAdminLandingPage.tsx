@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent } from 'react'
 import HospitalDetailTop from './HospitalDetailTop'
 import HospitalAdminDetail from './HospitalAdminDetail'
 import AppointmentSchedule from './AppointmentSchedule'
-import { fetchAppointmentSlots, AppointmentSlot, createTimeslots } from '../apis/infomed'
+import { fetchAppointmentSlots, AppointmentSlot, createTimeslots, deleteTimeslot } from '../apis/infomed'
 import { startOfWeek, endOfWeek } from 'date-fns'
 import { useParams } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
@@ -58,6 +58,13 @@ export const HospitalAdminLandingPage = ({ hospitalId }: HospitalAdminLandingPag
     setTimeslotLengthValid(e.target.checkValidity());
   }
 
+  const onDeleteAppointmentSlot = async (slot: AppointmentSlot) => {
+    await deleteTimeslot(hospitalId, slot.id);
+    setVisibleSlots(visibleSlots.filter(
+      ({ id }) => id !== slot.id
+    ));
+  }
+
   return (
     <Container>
       <HospitalDetailTop />
@@ -66,6 +73,7 @@ export const HospitalAdminLandingPage = ({ hospitalId }: HospitalAdminLandingPag
         date={focusedDate}
         appointmentSlots={visibleSlots}
         onSelectTimeRange={onSelectTimeRange}
+        onDeleteAppointmentSlot={onDeleteAppointmentSlot}
       />
       <Modal
         show={!!timeRangeForCreatingSlots}

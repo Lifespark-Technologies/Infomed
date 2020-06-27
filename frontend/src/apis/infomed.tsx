@@ -29,11 +29,13 @@ export const searchForHospitals = async (name: string, near: GeoCoordinates): Pr
 };
 
 export interface AppointmentSlot {
+  readonly id: string;
   readonly start: Date;
   readonly end: Date;
 }
 
 interface AppointmentSlotJson {
+  readonly id: string;
   readonly start: string;
   readonly end: string;
 }
@@ -42,14 +44,15 @@ export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end
   const startEnc = encodeURIComponent(formatISO(start));
   const endEnc = encodeURIComponent(formatISO(end));
   const hospitalIdEnc = encodeURIComponent(hospitalId);
-  const query = `start=${startEnc}&end=${endEnc}`;
+  const query = `since=${startEnc}&until=${endEnc}`;
   const response = await fetch(
-    `/apis/hospitals/${hospitalIdEnc}/appointmentSlots?${query}`);
+    `/apis/hospitals/${hospitalIdEnc}/appointment-slots?${query}`);
   const results = await response.json() as AppointmentSlotJson[];
   return results.map(parseAppointmentSlot);
 };
 
-const parseAppointmentSlot = ({ start, end }: AppointmentSlotJson) => ({
+const parseAppointmentSlot = ({ id, start, end }: AppointmentSlotJson) => ({
+  id,
   start: parseISO(start),
   end: parseISO(end),
 });
@@ -171,7 +174,8 @@ export const fetchHospitalAddress = async (hospitalId: string) => {
 export const createTimeslots = async (
   hospitalId: string, start: Date, end: Date, slotLength: Duration
 ) => {
-  const response = await fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`, {
+  const hospitalIdEnc = encodeURIComponent(hospitalId);
+  const response = await fetch(`/apis/hospitals/${hospitalIdEnc}/appointment-slots`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -181,4 +185,13 @@ export const createTimeslots = async (
     }),
   })
   return (await response.json()).map(parseAppointmentSlot);
+}
+
+export const deleteTimeslot = (hospitalId: string, timeslotId: string) => {
+  const hospitalIdEnc = encodeURIComponent(hospitalId);
+  const timeslotIdEnc = encodeURIComponent(timeslotId);
+  return fetch(
+    `/apis/hospitals/${hospitalIdEnc}/appointment-slots/${timeslotIdEnc}`,
+    { method: 'DELETE' },
+  );
 }
