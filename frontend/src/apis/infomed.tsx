@@ -168,10 +168,10 @@ export const fetchHospitalAddress = async (hospitalId: string) => {
   }
 }
 
-export const createTimeslots = (
+export const createTimeslots = async (
   hospitalId: string, start: Date, end: Date, slotLength: Duration
 ) => {
-  fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`, {
+  const response = await fetch(`/apis/hospitals/${hospitalId}/appointmentSlots`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -180,4 +180,10 @@ export const createTimeslots = (
       slotLength: formatISODuration(slotLength),
     }),
   })
+  return (await response.json()).map(({ start, end }: AppointmentSlotJson) => {
+    return {
+      start: parseISO(start),
+      end: parseISO(end),
+    };
+  });
 }

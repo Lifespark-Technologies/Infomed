@@ -25,14 +25,6 @@ interface AppointmentScheduleProps {
 export default (
   { date, appointmentSlots, onSelectTimeRange }: AppointmentScheduleProps
 ) => {
-  const altSlots = [];
-  let d = new Date(2020, 5, 11, 10, 0);
-  for (let i = 0; i < 240; ++i) {
-    const d2 = addMinutes(d, 9);
-    altSlots.push({ start: d, end: d2 });
-    d = addMinutes(d2, 1);
-  }
-
   const onSelectSlot = ({start, end}: {start: string | Date, end: string | Date}) => {
     if (typeof start === 'string' || typeof end === 'string') {
       throw Error('Date expected, got a string instead');
@@ -46,7 +38,6 @@ export default (
         <Calendar
           localizer={localizer}
           events={[...appointmentSlots]}
-          // events={altSlots}
           formats={{ eventTimeRangeFormat: () => '' }}  // Don't display event times at all.
           step={10}
           timeslots={6}
@@ -57,13 +48,7 @@ export default (
           selectable
           onSelectSlot={onSelectSlot}
           showMultiDayTimes
-
-          // This is a hacky way to force small events to display underneath
-          // each other. The Calendar control is just too smart, and we may want
-          // to replace it in future.
-          eventPropGetter={() => ({
-            style: { minHeight: 0, minWidth: '100%', position: 'initial' },
-          })}
+          dayLayoutAlgorithm="no-overlap"
         />
       </Card.Body>
     </Card>

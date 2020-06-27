@@ -46,8 +46,11 @@ export const HospitalAdminLandingPage = ({ hospitalId }: HospitalAdminLandingPag
       throw Error('No time range selected');
     }
     const { start, end } = timeRangeForCreatingSlots;
-    createTimeslots(hospitalId, start, end, { minutes: parseInt(timeslotLength) });
+    const newSlots = await createTimeslots(
+      hospitalId, start, end, { minutes: parseInt(timeslotLength) },
+    );
     setTimeRangeForCreatingSlots(null);
+    setVisibleSlots([...visibleSlots, ...newSlots])
   }
 
   const onTimeslotLengthChange = (e: ChangeEvent<HTMLInputElement>) => {

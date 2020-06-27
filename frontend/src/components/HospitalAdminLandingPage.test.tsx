@@ -42,8 +42,9 @@ beforeEach(() => {
     .get('path:/apis/hospitals/2/appointmentSlots', [
       { start: '2020-02-06T10:00:00Z', end: '2020-02-06T11:00:00Z' },
     ])
-    .post('/apis/hospitals/1/appointmentSlots', 200)
-    .post('/apis/hospitals/2/appointmentSlots', 200)
+    .post('/apis/hospitals/1/appointmentSlots', [])
+    .post('/apis/hospitals/2/appointmentSlots', []);
+  MockCalendar.mockClear();
 })
 
 afterEach(() => fetchMock.reset())
@@ -152,6 +153,8 @@ test('can create appointment slots', async () => {
     },
     headers: { 'Content-Type': 'application/json' },
   })).toBe(true);
+  ({ onSelectSlot } = lastCall(MockCalendar)[0])
+
 });
 
 test.each([
@@ -236,4 +239,67 @@ test('validates appointment timeslot length', async () => {
 
   fireEvent.change(timeslotLengthInput, { target: { value: '' } });
   expect(getByRole('button', { name: 'Create slots' })).toBeDisabled();
+});
+
+it('displays returned timeslots', async () => {
+  fetchMock.post(
+    {
+      url: '/apis/hospitals/2/appointmentSlots',
+      overwriteRoutes: true,
+    },
+    [
+      { start: '2020-02-05T12:00:00Z', end: '2020-02-05T12:15:00Z' },
+      { start: '2020-02-05T12:15:00Z', end: '2020-02-05T12:30:00Z' },
+    ]
+  );
+
+  const { getByRole, queryByRole } = await renderAsync(
+    <HospitalAdminLandingPage hospitalId="2" />
+  )
+
+  let { onSelectSlot } = lastRenderedProps(MockCalendar)
+  act(() => onSelectSlot!({
+    start: new Date(2020, 1, 5, 12, 0),
+    end: new Date(2020, 1, 5, 13, 0),
+    slots: [], // We don't actually care about this field.
+    action: 'select',
+  }));
+  await act(async () => getByRole('button', { name: 'Create slots' }).click());
+
+  expectToBeRenderedWith(Calendar, {
+    events: [
+      { start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
+      { start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
+    ],
+  });
+
+  fetchMock.post(
+    {
+      url: '/apis/hospitals/2/appointmentSlots',
+      overwriteRoutes: true,
+    },
+    [
+      { start: '2020-02-07T14:00:00Z', end: '2020-02-07T14:15:00Z' },
+    ]
+  );
+
+  ({ onSelectSlot } = lastCall(MockCalendar)[0])
+  act(() => onSelectSlot!({
+    start: new Date(2020, 1, 7, 14, 0),
+    end: new Date(2020, 1, 7, 14, 15),
+    slots: [], // We don't actually care about this field.
+    action: 'select',
+  }))
+  MockCalendar.mockClear();
+  await act(async () => getByRole('button', { name: 'Create slots' }).click());
+
+  expectToBeRenderedWith(Calendar, {
+    events: [
+      { start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
+      { start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
+      { start: new Date(2020, 1, 7, 14, 0), end: new Date(2020, 1, 7, 14, 15) },
+    ],
+  });
 });
