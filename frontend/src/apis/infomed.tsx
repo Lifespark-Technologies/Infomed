@@ -46,13 +46,13 @@ export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end
   const response = await fetch(
     `/apis/hospitals/${hospitalIdEnc}/appointmentSlots?${query}`);
   const results = await response.json() as AppointmentSlotJson[];
-  return results.map(({ start, end }: AppointmentSlotJson) => {
-    return {
-      start: parseISO(start),
-      end: parseISO(end),
-    };
-  });
+  return results.map(parseAppointmentSlot);
 };
+
+const parseAppointmentSlot = ({ start, end }: AppointmentSlotJson) => ({
+  start: parseISO(start),
+  end: parseISO(end),
+});
 
 export const scheduleAppointment = async (
   hospitalId: string, start: Date, email: string
@@ -180,10 +180,5 @@ export const createTimeslots = async (
       slotLength: formatISODuration(slotLength),
     }),
   })
-  return (await response.json()).map(({ start, end }: AppointmentSlotJson) => {
-    return {
-      start: parseISO(start),
-      end: parseISO(end),
-    };
-  });
+  return (await response.json()).map(parseAppointmentSlot);
 }
