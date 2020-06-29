@@ -58,7 +58,7 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
 
   // Once user confirms, schedule an appointment.
   const schedule = async () => {
-    setShowModal(!showModal);
+    setShowModal(true);
     if (!appointmentSlot) {
       return;
     }

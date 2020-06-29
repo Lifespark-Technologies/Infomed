@@ -28,33 +28,8 @@ export default ({show,onHide}:OTPVerificationProps) => {
                 <InputGroup className="mb-3 d-flex justify-content-center ">
                     <div className="d-flex align-items-center">
                     <FormControl
-                    className={`${styles.OTPverification_modal_body_input} mr-2 ml-2`}
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    />
-                    <span>-</span>
-                    </div>
-                    <div className="d-flex align-items-center">
-                    <FormControl
-                    className={`${styles.OTPverification_modal_body_input} mr-2 ml-2`}
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    />
-                    <span>-</span>
-                    </div>
-                    <div className="d-flex align-items-center">
-                    <FormControl
-                    className={`${styles.OTPverification_modal_body_input} mr-2 ml-2`}
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    />
-                    <span>-</span>
-                    </div>
-                    <div className="d-flex align-items-center">
-                    <FormControl
-                    className={`${styles.OTPverification_modal_body_input} mr-2 ml-2`}
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
+                    className={`mr-2 ml-2`}
+                    aria-label="OTP-verification"
                     />
                     </div>
                 </InputGroup>
