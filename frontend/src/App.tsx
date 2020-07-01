@@ -24,9 +24,6 @@ class App extends React.Component {
               <Route path="/login">
                 <CognitoLoginAndReg />
               </Route>
-              <Route path="/custom-login-reg">
-                <LoginAndRegisteration />
-              </Route>
               <Route path="/hospitals/:hospitalId/admin">
                 <HospitalAdminLandingPage />
               </Route>
