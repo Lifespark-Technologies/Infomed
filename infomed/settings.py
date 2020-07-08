@@ -137,4 +137,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "frontend", "build", "static"),
 )
 
-CORS_ORIGIN_ALLOW_ALL = True
+# Whitelist calls from the same server.
+CORS_ORIGIN_REGEX_WHITELIST = [
+    "http://localhost:*",
+]
