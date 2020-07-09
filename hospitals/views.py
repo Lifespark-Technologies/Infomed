@@ -52,7 +52,6 @@ class AppointmentSlotView(NestedViewSetMixin, viewsets.ModelViewSet):
         slot_end = slot_start + slot_length
         created_slots = []
         while slot_end <= end:
-            print('Creating a slot', slot_start, slot_end)
             slot = hospital.appointment_slots.create(
                 start=slot_start, end=slot_end, status="available")
             slot.save()

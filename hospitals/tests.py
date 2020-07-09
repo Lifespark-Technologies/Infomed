@@ -2,31 +2,19 @@ from django.test import TestCase
 from .models import Hospital, AppointmentSlot
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.core.exceptions import ValidationError
-from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIClient
 # Create your tests here.
+
 
 class HospitalTestCase(TestCase):
     def setUp(self):
-        # Setting up the request factory
-        self.factory = APIRequestFactory()
-
         # Setting up hospitals
         loc1 = GEOSGeometry("Point(5 23)")
         loc2 = GEOSGeometry("Point(8 30)")
-        self.hospital1 = Hospital.objects.create(name="TestHospital1", location=loc1)
-        self.hospital1 = Hospital.objects.create(name="TestHospital2", location=loc2)
-
-        # Setting up appointments for use in later test cases
-        self.start1 = "2020-04-01T10:00:00Z"
-        self.end1 = "2020-04-01T10:30:00Z"
-        self.status1 = "available"
-        AppointmentSlot.objects.create(start=self.start1, end=self.end1, status=self.status1, hospital=self.hospital1)
-
-        # Creates a new appointment slot with a differnet time 
-        self.start2 = "2020-04-01T10:30:00.000"
-        self.end2 = "2020-04-01T11:00:00.000"
-        AppointmentSlot.objects.create(start=self.start2, end=self.end2, status=self.status1, hospital=self.hospital1)
-
+        self.hospital1 = Hospital.objects.create(
+            name="TestHospital1", location=loc1)
+        self.hospital1 = Hospital.objects.create(
+            name="TestHospital2", location=loc2)
 
     def test_get_hospital_location(self):
         """
@@ -51,4 +39,66 @@ class HospitalTestCase(TestCase):
         self.assertEqual(h2.name, "TestHospital2")
 
 
+class AppointmentSlotTestCase(TestCase):
+    def setUp(self):
+        self.api = APIClient()
+        self.hospital = Hospital.objects.create(
+            id=1, name="TestHospital", location=GEOSGeometry("Point(0 0)")
+        )
 
+    def test_creates_and_retrieves_slots(self):
+        response = self.api.post(
+            '/apis/hospitals/1/appointment-slots',
+            {
+                'start': '2020-03-02T08:00:00Z',
+                'end': '2020-03-02T09:00:00Z',
+                'slotLength': 'P0Y0M0DT0H20M0S',
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = self.api.get('/apis/hospitals/1/appointment-slots')
+        response_without_ids = [strip_id(slot) for slot in response.json()]
+        self.assertCountEqual(
+            response_without_ids,
+            [
+                {
+                    'start': '2020-03-02T08:00:00Z',
+                    'end': '2020-03-02T08:20:00Z',
+                    'status': 'available'
+                },
+                {
+                    'start': '2020-03-02T08:20:00Z',
+                    'end': '2020-03-02T08:40:00Z',
+                    'status': 'available'
+                },
+                {
+                    'start': '2020-03-02T08:40:00Z',
+                    'end': '2020-03-02T09:00:00Z',
+                    'status': 'available'
+                },
+            ]
+        )
+
+    def test_removes_slots(self):
+        self.hospital.appointment_slots.create(
+            id=1,
+            start='2020-04-01T10:00:00Z',
+            end='2020-04-01T10:30:00Z',
+        )
+        self.hospital.appointment_slots.create(
+            id=2,
+            start='2020-04-01T11:00:00Z',
+            end='2020-04-01T11:30:00Z',
+        )
+        response = self.api.delete('/apis/hospitals/1/appointment-slots/1')
+        self.assertEqual(response.status_code, 204)
+
+        ids = list(AppointmentSlot.objects.values_list('id', flat=True))
+        self.assertEqual(ids, [2])
+
+
+def strip_id(dict):
+    """Returns a dict that doesn't contain an 'id' key."""
+    return {k: v for k, v in dict.items() if k != 'id'}
