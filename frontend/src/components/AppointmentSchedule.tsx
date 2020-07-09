@@ -7,6 +7,7 @@ import { enGB } from 'date-fns/locale';
 import { AppointmentSlot } from '../apis/infomed';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 const localizer = dateFnsLocalizer({
   format,
@@ -19,21 +20,63 @@ const localizer = dateFnsLocalizer({
 interface AppointmentScheduleProps {
   date: Date
   appointmentSlots: readonly AppointmentSlot[]
+  onSelectTimeRange?: (start: Date, end: Date) => void
+  onDeleteAppointmentSlot?: (slot: AppointmentSlot) => void
 }
 
-export default ({ date, appointmentSlots }: AppointmentScheduleProps) => {
+export default (
+  {
+    date,
+    appointmentSlots,
+    onSelectTimeRange,
+    onDeleteAppointmentSlot,
+  }: AppointmentScheduleProps
+) => {
+  const onSelectSlot = ({ start, end }: { start: string | Date, end: string | Date }) => {
+    if (typeof start === 'string' || typeof end === 'string') {
+      throw Error('Date expected, got a string instead');
+    }
+    onSelectTimeRange?.(start, end);
+  }
+
+  const getTitle = (slot: AppointmentSlot) => {
+    const onDeleteClick = () => {
+      onDeleteAppointmentSlot?.(slot);
+    };
+
+    const startDateStr = format(slot.start, 'PPPp');
+    return (
+      <div className={styles.appointmentContainer}>
+        <Button
+          className={styles.deleteButton}
+          aria-label={`Remove timeslot starting at ${startDateStr}`}
+          onClick={onDeleteClick}
+        >
+          ✕
+      </Button>
+      </div>
+    ) as unknown as string;
+  };
 
   return (
     <Card bg="light" className="shadow">
-      <Card.Body className={styles.schedule_container}>
+      <Card.Body className={styles.scheduleContainer}>
         <Calendar
           localizer={localizer}
           events={[...appointmentSlots]}
           formats={{ eventTimeRangeFormat: () => '' }}  // Don't display event times at all.
-          step={60}
+          step={10}
+          timeslots={6}
           defaultView='week'
           views={['week']}
           date={date}
+          toolbar={false}
+          selectable
+          onSelectSlot={onSelectSlot}
+          showMultiDayTimes
+          dayLayoutAlgorithm="no-overlap"
+          titleAccessor={getTitle}
+          eventPropGetter={() => ({ style: { overflow: 'visible' } })}
         />
       </Card.Body>
     </Card>

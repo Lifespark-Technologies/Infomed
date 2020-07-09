@@ -10,12 +10,12 @@ import { renderAsync } from "../testUtils";
 beforeEach(() => {
   advanceTo(new Date(2020, 5, 1));
   fetchMock
-    .get('path:/apis/hospitals/1/appointmentSlots', [
+    .get('path:/apis/hospitals/1/appointment-slots', [
       { start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
       { start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
       { start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
     ])
-    .get('path:/apis/hospitals/2/appointmentSlots', {
+    .get('path:/apis/hospitals/2/appointment-slots', {
       body: [
         { start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z' },
       ]
