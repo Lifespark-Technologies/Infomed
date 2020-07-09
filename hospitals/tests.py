@@ -50,5 +50,16 @@ class HospitalTestCase(TestCase):
         self.assertEqual(h1.name, "TestHospital1")
         self.assertEqual(h2.name, "TestHospital2")
 
+    def test_int_field(self):
+        h = Hospital.objects.get(location="Point(5 23)")
+
+        self.assertEqual(h.sanitizer, 0)
+        self.assertEqual(h.infrared_thermometer, 0)
+
+    def test_float_field(self):
+        h = Hospital.objects.get(location="Point(5 23)")
+        self.assertEqual(h.handwash, 0.0)
+        self.assertEqual(h.sodium_hypochlorite, 0.0)
+
 
 
