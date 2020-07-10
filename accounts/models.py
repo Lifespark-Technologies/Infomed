@@ -29,16 +29,26 @@ class Role(models.Model):
 
 
 
-class MyAccountManger(BaseUserManager):
-    def create_user(self, email, username, password=None):
+class MyAccountManager(BaseUserManager):
+    """
+    This is the custom user manager that we've written in place of
+    the default one. This inspired by the following example:
+    https://github.com/mitchtabian/CodingWithMitch-Blog-Course/blob/Customizing-Django-Admin-(search-and-filtering)/src/account/models.py.
+    It provides a create_user routine and a creat_superuser routine.
+    """
+
+    def create_user(self, email, username, password=None, role=None):
         if not email:
             raise ValueError("Users must have a valid email address")
         if not username:
             raise ValueError("Users must have a valid username")
+        if not role:
+            raise ValueError("Users must have a valid role")
 
         user = self.model(
             email = self.normalize_email(email),
             username=username,
+            role=role,
         )
 
         user.set_password(password)
@@ -76,7 +86,8 @@ class Account(AbstractBaseUser):
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
 
     # Specify the type of account (hospital admin, hospital staff, or general user)
-    role = models.OneToOneField(Role)
+    # CASCADE on_delete because if the account is deleted, then also get rid of the account role
+    role = models.OneToOneField(Role, on_delete=models.CASCADE)
 
     # Boolean to determine if the user is a superuser
     is_superuser = models.BooleanField(default=False)
@@ -88,9 +99,9 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = "email"
 
     # When creating a user, the following fields must be required.
-    REQUIRED_FIELDS = ["username",]
+    REQUIRED_FIELDS = ["username", "role",]
 
-    objects = MyAccountManger()
+    objects = MyAccountManager()
 
     def __str__(self):
         return self.email
