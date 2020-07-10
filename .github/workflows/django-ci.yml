@@ -25,6 +25,7 @@ jobs:
       run: |
         sudo apt update
         yes | sudo ./useful_scripts/install_dependencies.sh
+        cd frontend && npm run build
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Set up environment
