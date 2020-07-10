@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.gis',
     'hospitals',
+    'accounts',
     'rest_framework_gis',
     'django_extensions' # Installed for quicker development
 ]
@@ -141,3 +142,5 @@ STATICFILES_DIRS = (
 CORS_ORIGIN_REGEX_WHITELIST = [
     "http://localhost:*",
 ]
+
+AUTH_USER_MODEL = "accounts.Account"
