@@ -8,7 +8,8 @@ import AppointmentScheduler from './components/AppointmentScheduler';
 import HospitalAdminLandingPage from './components/HospitalAdminLandingPage'
 import HospitalList from './components/HospitalList'
 import HospitalInventoryEditor from './components/HospitalInventoryEditor'
-import HospitalInventoryList from './components/HospitalInventoryList'
+import HospitalInventoryList from './components/HospitalInventoryList';
+import HospitalAdminDashboard from './components/HospitalAdminDashboard';
 
 class App extends React.Component {
   render() {
@@ -18,6 +19,9 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
+              <Route path="/hospitals/:hospitalId/admin-dashboard">
+                <HospitalAdminDashboard />
+              </Route>
               <Route path="/hospitals/:hospitalId/admin">
                 <HospitalAdminLandingPage />
               </Route>
