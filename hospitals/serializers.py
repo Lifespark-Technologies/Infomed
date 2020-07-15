@@ -11,7 +11,7 @@ class AppointmentSlotSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = AppointmentSlot
-        fields = ("start", "end", "status")
+        fields = ("id", "start", "end", "status")
 
 
 class HospitalSerializer(serializers.GeoFeatureModelSerializer):

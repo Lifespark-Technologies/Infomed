@@ -1,5 +1,7 @@
 # Infomed
 
+![Django CI](https://github.com/Lifespark-Technologies/Infomed/workflows/Django%20CI/badge.svg) ![Frontend CI](https://github.com/Lifespark-Technologies/Infomed/workflows/Frontend%20CI/badge.svg)
+
 Web portal that enables communication between hospitals and health authorities
 
 # Technical overview

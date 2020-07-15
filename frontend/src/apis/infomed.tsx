@@ -1,4 +1,4 @@
-import { parseISO, formatISO } from "date-fns";
+import { parseISO, formatISO, formatISODuration } from "date-fns";
 
 export interface GeoCoordinates {
   readonly lat: number;
@@ -29,11 +29,13 @@ export const searchForHospitals = async (name: string, near: GeoCoordinates): Pr
 };
 
 export interface AppointmentSlot {
+  readonly id: string;
   readonly start: Date;
   readonly end: Date;
 }
 
 interface AppointmentSlotJson {
+  readonly id: string;
   readonly start: string;
   readonly end: string;
 }
@@ -42,17 +44,18 @@ export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end
   const startEnc = encodeURIComponent(formatISO(start));
   const endEnc = encodeURIComponent(formatISO(end));
   const hospitalIdEnc = encodeURIComponent(hospitalId);
-  const query = `start=${startEnc}&end=${endEnc}`;
+  const query = `since=${startEnc}&until=${endEnc}`;
   const response = await fetch(
-    `/apis/hospitals/${hospitalIdEnc}/appointmentSlots?${query}`);
+    `/apis/hospitals/${hospitalIdEnc}/appointment-slots?${query}`);
   const results = await response.json() as AppointmentSlotJson[];
-  return results.map(({ start, end }: AppointmentSlotJson) => {
-    return {
-      start: parseISO(start),
-      end: parseISO(end),
-    };
-  });
+  return results.map(parseAppointmentSlot);
 };
+
+const parseAppointmentSlot = ({ id, start, end }: AppointmentSlotJson) => ({
+  id,
+  start: parseISO(start),
+  end: parseISO(end),
+});
 
 export const scheduleAppointment = async (
   hospitalId: string, start: Date, email: string
@@ -161,9 +164,34 @@ export interface HospitalAddress {
 
 export const fetchHospitalAddress = async (hospitalId: string) => {
   return {
-      street: '10 Delhi House Mumbai India',
-      city: 'dehli',
-      zip: 123456,
-      country: ''
+    street: '10 Delhi House Mumbai India',
+    city: 'dehli',
+    zip: 123456,
+    country: ''
   }
+}
+
+export const createTimeslots = async (
+  hospitalId: string, start: Date, end: Date, slotLength: Duration
+) => {
+  const hospitalIdEnc = encodeURIComponent(hospitalId);
+  const response = await fetch(`/apis/hospitals/${hospitalIdEnc}/appointment-slots`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      start: formatISO(start),
+      end: formatISO(end),
+      slotLength: formatISODuration(slotLength),
+    }),
+  })
+  return (await response.json()).map(parseAppointmentSlot);
+}
+
+export const deleteTimeslot = (hospitalId: string, timeslotId: string) => {
+  const hospitalIdEnc = encodeURIComponent(hospitalId);
+  const timeslotIdEnc = encodeURIComponent(timeslotId);
+  return fetch(
+    `/apis/hospitals/${hospitalIdEnc}/appointment-slots/${timeslotIdEnc}`,
+    { method: 'DELETE' },
+  );
 }
