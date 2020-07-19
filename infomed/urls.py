@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# Note: order of inclusion is important here. The frontend URLs contain a
+# catch-all clause that routes all of the remaining URLs to index.html, hence
+# they must appear as the last entry.
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('hospitals.urls')),
     path('', include('frontend.urls')),
-    path('', include('hospitals.urls'))
 ]
