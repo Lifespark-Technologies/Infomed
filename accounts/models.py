@@ -15,11 +15,13 @@ class Role(models.Model):
     HOSP_ADMIN = 1
     HOSP_STAFF = 2
     GENERAL_USER = 3
+    GOVERNMENT_OFFICIAL = 4
 
     ROLE_CHOICES = (
         (HOSP_ADMIN, "admin"),
         (HOSP_STAFF, "staff"),
         (GENERAL_USER, "general_user"),
+        (GOVERNMENT_OFFICIAL, "government_official")
     )
 
     id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)

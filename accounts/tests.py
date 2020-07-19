@@ -35,6 +35,13 @@ class AccountsManagersTests(TestCase):
             role=self.test_general_user_role
         )
 
+        self.test_acct_govt_user = Account.objects.create_user(
+            email="govt@gmail.com",
+            password="foo",
+            username="user",
+            role=self.test_
+        )
+
     def test_create_roles(self):
         self.assertEqual(self.test_admin_role.id, 1)
         self.assertEqual(self.test_staff_role.id, 2)
