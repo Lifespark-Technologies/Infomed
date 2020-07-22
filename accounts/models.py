@@ -58,11 +58,10 @@ class MyAccountManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, password):
+    def create_superuser(self, email, password):
         user = self.create_user(
             email = self.normalize_email(email),
             password=password,
-            username=username,
         )
 
         user.is_superuser = True
@@ -88,8 +87,8 @@ class Account(AbstractBaseUser):
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
 
     # Specify the type of account (hospital admin, hospital staff, or general user)
-    # CASCADE on_delete because if the account is deleted, then also get rid of the account role
-    role = models.OneToOneField(Role, on_delete=models.CASCADE)
+    # The Role object should never be able to be deleted
+    role = models.ForeignKey(Role, on_delete=models.PROTECT)
 
     # Boolean to determine if the user is a superuser
     is_superuser = models.BooleanField(default=False)
