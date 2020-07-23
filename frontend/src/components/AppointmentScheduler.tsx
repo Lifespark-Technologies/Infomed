@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AppointmentDatePicker from "./AppointmentDatePicker";
 import { AppointmentSlot, fetchAppointmentSlots, scheduleAppointment } from "../apis/infomed";
 import AppointmentTimePicker from "./AppointmentTimePicker";
-import { format, isSameDay } from "date-fns";
+import { format, isSameDay, startOfMonth, addMonths } from "date-fns";
 import { useParams } from "react-router-dom";
 import OTPVerification from './OTPVerification';
 
@@ -31,6 +31,7 @@ interface AppointmentSchedulerParams {
  */
 export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams) => {
   // Mutable control state.
+  const [monthStartDate, setMonthStartDate] = useState(startOfMonth(new Date()));
   const [availableSlots, setAvailableSlots] = useState<AppointmentSlot[]>([]);
   const [stage, setStage] = useState(Stage.Loading);
   const [datePicked, setDatePicked] = useState(new Date());
@@ -42,13 +43,12 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
   // the server.
   useEffect(() => {
     (async () => {
-      // TODO(@bl-nero): Change dates whenever user changes month in the calendar.
       const slots = await fetchAppointmentSlots(
-        hospitalId, new Date(2020, 4, 1), new Date(2020, 6, 1));
+        hospitalId, monthStartDate, addMonths(monthStartDate, 1));
       setAvailableSlots(slots);
       setStage(Stage.SelectDate);
     })();
-  }, [hospitalId] /* Fetch whenever hospitalId changes. */);
+  }, [hospitalId, monthStartDate] /* Fetch whenever hospitalId or month change. */);
 
   // Switch to time slot selection once user picks date.
   const pickDate = (date: Date) => {
@@ -77,7 +77,12 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
     case Stage.SelectDate: return (
       <div>
         Please select a date
-        <AppointmentDatePicker availableSlots={availableSlots} onDatePicked={pickDate} />
+        <AppointmentDatePicker
+          availableSlots={availableSlots}
+          startDate={monthStartDate}
+          onDatePicked={pickDate}
+          onStartDateChange={setMonthStartDate}
+        />
       </div>
     );
     case Stage.SelectTime: return (
@@ -94,8 +99,8 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
         </label>
         <button disabled={!appointmentSlot || !email} onClick={schedule}>
           Done
-          </button>
-          <OTPVerification show={showModal} onHide={()=>setShowModal(false)} />
+        </button>
+        <OTPVerification show={showModal} onHide={() => setShowModal(false)} />
       </div>
     );
 

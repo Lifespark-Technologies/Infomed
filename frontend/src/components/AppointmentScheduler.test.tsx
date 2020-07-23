@@ -8,13 +8,27 @@ import { renderAsync } from "../testUtils";
 
 
 beforeEach(() => {
-  advanceTo(new Date(2020, 5, 1));
+  advanceTo(new Date(2020, 5, 3));
   fetchMock
-    .get('path:/apis/hospitals/1/appointment-slots', [
-      { start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
-      { start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
-      { start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
-    ])
+    .get(
+      {
+        url: 'path:/apis/hospitals/1/appointment-slots',
+        query: { since: '2020-06-01T00:00:00Z', until: '2020-07-01T00:00:00Z', },
+      },
+      [
+        { start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
+        { start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
+        { start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
+      ])
+    .get(
+      {
+        url: 'path:/apis/hospitals/1/appointment-slots',
+        query: { since: '2020-07-01T00:00:00Z', until: '2020-08-01T00:00:00Z', },
+        overwriteRoutes: false,
+      },
+      [
+        { start: '2020-07-10T17:00:00Z', end: '2020-07-10T18:00:00Z' },
+      ])
     .get('path:/apis/hospitals/2/appointment-slots', {
       body: [
         { start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z' },
@@ -45,11 +59,11 @@ test.each`
     await act(async () => userEvent.click(getByLabelText(timeSlotText)));
     expect(doneButton).toBeDisabled();
 
-    await act(async() => userEvent.type(
+    await act(async () => userEvent.type(
       getByLabelText(/what’s your email address?/i), 'foo@example.com'));
     expect(doneButton).toBeEnabled();
 
-    await act(async() => userEvent.click(doneButton));
+    await act(async () => userEvent.click(doneButton));
     expect(fetchMock.called('/apis/hospital/1/schedule-appointment', {
       body: {
         hospitalId,
@@ -78,4 +92,18 @@ test('should not display times from other days', async () => {
   userEvent.click(getByLabelText('June 7, 2020'));
   expect(queryByText(/please select a time/i)).toBeInTheDocument();
   expect(queryByLabelText('15:30 – 15:45')).not.toBeInTheDocument();
+});
+
+test('should switch between months', async () => {
+    const { getByText, getByLabelText, getByRole } =
+      await renderAsync(<AppointmentScheduler hospitalId="1" />);
+
+    expect(getByLabelText('June 5, 2020')).toBeDisabled();
+    expect(getByLabelText('June 6, 2020')).toBeEnabled();
+
+    // Go to next week.
+    await act(async () => userEvent.click(getByRole('button', {name: '›'})));
+
+    expect(getByLabelText('July 10, 2020')).toBeEnabled();
+    expect(getByLabelText('July 11, 2020')).toBeDisabled();
 });
