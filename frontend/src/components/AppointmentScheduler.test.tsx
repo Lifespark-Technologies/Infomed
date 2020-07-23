@@ -16,9 +16,9 @@ beforeEach(() => {
         query: { since: '2020-06-01T00:00:00Z', until: '2020-07-01T00:00:00Z', },
       },
       [
-        { start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
-        { start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
-        { start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
+        { id: '10', start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
+        { id: '11', start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
+        { id: '12', start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
       ])
     .get(
       {
@@ -27,25 +27,25 @@ beforeEach(() => {
         overwriteRoutes: false,
       },
       [
-        { start: '2020-07-10T17:00:00Z', end: '2020-07-10T18:00:00Z' },
+        { id: '13', start: '2020-07-10T17:00:00Z', end: '2020-07-10T18:00:00Z' },
       ])
     .get('path:/apis/hospitals/2/appointment-slots', {
       body: [
-        { start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z' },
+        { id: '20', start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z' },
       ]
     })
-    .post('/apis/hospital/1/schedule-appointment', 200)
-    .post('/apis/hospital/2/schedule-appointment', 200);
+    .post('/apis/hospitals/1/appointment-slots/11/schedule', 200)
+    .post('/apis/hospitals/2/appointment-slots/20/schedule', 200);
 });
 
 afterEach(() => fetchMock.reset());
 
 test.each`
-  hospitalId | dateLabel         | dateText            | timeSlotText       | timeSlotStart
-  ${'1'}     | ${'June 6, 2020'} | ${'June 6th, 2020'} | ${'15:30 – 15:45'} | ${'2020-06-06T15:30:00Z'}
-  ${'2'}     | ${'June 9, 2020'} | ${'June 9th, 2020'} | ${'10:00 – 11:00'} | ${'2020-06-09T10:00:00Z'}
+  hospitalId | dateLabel         | dateText            | timeSlotText       | timeSlotId
+  ${'1'}     | ${'June 6, 2020'} | ${'June 6th, 2020'} | ${'15:30 – 15:45'} | ${'11'}
+  ${'2'}     | ${'June 9, 2020'} | ${'June 9th, 2020'} | ${'10:00 – 11:00'} | ${'20'}
 `('should schedule an appointment at hospital $hospitalId',
-  async ({ hospitalId, dateLabel, dateText, timeSlotText, timeSlotStart }) => {
+  async ({ hospitalId, dateLabel, dateText, timeSlotText, timeSlotId }) => {
     const { getByText, getByLabelText } =
       await renderAsync(<AppointmentScheduler hospitalId={hospitalId} />);
     expect(getByText(/please select a date/i)).toBeInTheDocument();
@@ -64,14 +64,15 @@ test.each`
     expect(doneButton).toBeEnabled();
 
     await act(async () => userEvent.click(doneButton));
-    expect(fetchMock.called('/apis/hospital/1/schedule-appointment', {
-      body: {
-        hospitalId,
-        start: timeSlotStart,
-        email: 'foo@example.com',
-      },
-      headers: { 'Content-Type': 'application/json' },
-    })).toBe(true);
+    expect(fetchMock.called(
+      `/apis/hospitals/${hospitalId}/appointment-slots/${timeSlotId}/schedule`,
+      {
+        body: {
+          email: 'foo@example.com',
+        },
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )).toBe(true);
     expect(getByText(/you’ve booked your appointment/i)).toBeInTheDocument();
   });
 
@@ -95,15 +96,15 @@ test('should not display times from other days', async () => {
 });
 
 test('should switch between months', async () => {
-    const { getByText, getByLabelText, getByRole } =
-      await renderAsync(<AppointmentScheduler hospitalId="1" />);
+  const { getByText, getByLabelText, getByRole } =
+    await renderAsync(<AppointmentScheduler hospitalId="1" />);
 
-    expect(getByLabelText('June 5, 2020')).toBeDisabled();
-    expect(getByLabelText('June 6, 2020')).toBeEnabled();
+  expect(getByLabelText('June 5, 2020')).toBeDisabled();
+  expect(getByLabelText('June 6, 2020')).toBeEnabled();
 
-    // Go to next week.
-    await act(async () => userEvent.click(getByRole('button', {name: '›'})));
+  // Go to next week.
+  await act(async () => userEvent.click(getByRole('button', { name: '›' })));
 
-    expect(getByLabelText('July 10, 2020')).toBeEnabled();
-    expect(getByLabelText('July 11, 2020')).toBeDisabled();
+  expect(getByLabelText('July 10, 2020')).toBeEnabled();
+  expect(getByLabelText('July 11, 2020')).toBeDisabled();
 });

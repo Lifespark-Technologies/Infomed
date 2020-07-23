@@ -63,7 +63,7 @@ export const AppointmentScheduler = ({ hospitalId }: AppointmentSchedulerParams)
       return;
     }
     //call this after otp verifiction
-    await scheduleAppointment(hospitalId, appointmentSlot.start, email);
+    await scheduleAppointment(hospitalId, appointmentSlot.id, email);
     setStage(Stage.Confirmed);
   }
 

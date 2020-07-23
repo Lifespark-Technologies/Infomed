@@ -58,16 +58,12 @@ const parseAppointmentSlot = ({ id, start, end }: AppointmentSlotJson) => ({
 });
 
 export const scheduleAppointment = async (
-  hospitalId: string, start: Date, email: string
+  hospitalId: string, timeslotId: string, email: string
 ) => {
-  fetch('/apis/hospital/1/schedule-appointment', {
+  fetch(`/apis/hospitals/${hospitalId}/appointment-slots/${timeslotId}/schedule`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      hospitalId,
-      start: formatISO(start),
-      email,
-    }),
+    body: JSON.stringify({ email }),
   });
 };
 

@@ -109,6 +109,25 @@ class AppointmentSlotTestCase(TestCase):
         ids = list(AppointmentSlot.objects.values_list('id', flat=True))
         self.assertEqual(ids, [2])
 
+    def test_schedules_appointment(self):
+        self.hospital.appointment_slots.create(
+            id=10,
+            start='2020-04-01T10:00:00Z',
+            end='2020-04-01T10:30:00Z',
+            status='available',
+        )
+        self.hospital.appointment_slots.create(
+            id=11,
+            start='2020-04-02T10:00:00Z',
+            end='2020-04-02T10:30:00Z',
+            status='available',
+        )
+        response = self.api.post('/apis/hospitals/1/appointment-slots/11/schedule')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(AppointmentSlot.objects.get(pk=10).status, 'available')
+        self.assertEqual(AppointmentSlot.objects.get(pk=11).status, 'unavailable')
+
 
 def strip_id(dict):
     """Returns a dict that doesn't contain an 'id' key."""
