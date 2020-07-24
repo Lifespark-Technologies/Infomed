@@ -58,6 +58,17 @@ export default (
     ) as unknown as string;
   };
 
+  const getEventProps = (event: AppointmentSlot) => {
+    const statusStyle = event.status === 'unavailable' ?
+      { backgroundColor: 'red' } : {};
+    return {
+      style: {
+        overflow: 'visible',
+        ...statusStyle,
+      },
+    };
+  };
+
   return (
     <Card bg="light" className="shadow">
       <Card.Body className={styles.scheduleContainer}>
@@ -76,7 +87,7 @@ export default (
           showMultiDayTimes
           dayLayoutAlgorithm="no-overlap"
           titleAccessor={getTitle}
-          eventPropGetter={() => ({ style: { overflow: 'visible' } })}
+          eventPropGetter={getEventProps}
         />
       </Card.Body>
     </Card>

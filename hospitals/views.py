@@ -61,3 +61,12 @@ class AppointmentSlotView(NestedViewSetMixin, viewsets.ModelViewSet):
 
         serializer = self.serializer_class(created_slots, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["POST"])
+    def schedule(self, request, **kwargs):
+        # TODO: Instead of changing status field, attach slot to a patient
+        # object.
+        slot = self.get_object()
+        slot.status = 'unavailable'
+        slot.save()
+        return Response()

@@ -26,9 +26,9 @@ beforeEach(() => {
         query: { since: '2020-02-02T00:00:00Z', until: '2020-02-08T23:59:59Z', },
       },
       [
-        { id: '12', start: '2020-02-03T13:00:00Z', end: '2020-02-03T14:00:00Z' },
-        { id: '13', start: '2020-02-03T15:30:00Z', end: '2020-02-03T15:45:00Z' },
-        { id: '14', start: '2020-02-07T17:00:00Z', end: '2020-02-07T17:30:00Z' },
+        { id: '12', start: '2020-02-03T13:00:00Z', end: '2020-02-03T14:00:00Z', status: 'available' },
+        { id: '13', start: '2020-02-03T15:30:00Z', end: '2020-02-03T15:45:00Z', status: 'available' },
+        { id: '14', start: '2020-02-07T17:00:00Z', end: '2020-02-07T17:30:00Z', status: 'unavailable' },
       ])
     .get(
       {
@@ -37,10 +37,10 @@ beforeEach(() => {
         overwriteRoutes: false,
       },
       [
-        { id: '15', start: '2020-02-20T10:00:00Z', end: '2020-02-20T11:00:00Z' },
+        { id: '15', start: '2020-02-20T10:00:00Z', end: '2020-02-20T11:00:00Z', status: 'available' },
       ])
     .get('path:/apis/hospitals/2/appointment-slots', [
-      { id: '21', start: '2020-02-06T10:00:00Z', end: '2020-02-06T11:00:00Z' },
+      { id: '21', start: '2020-02-06T10:00:00Z', end: '2020-02-06T11:00:00Z', status: 'available' },
     ])
     .post('/apis/hospitals/1/appointment-slots', [])
     .post('/apis/hospitals/2/appointment-slots', [])
@@ -60,9 +60,9 @@ test('fetches appointment slots and renders them on the big calendar', async () 
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 4),
     events: [
-      { id: '12', start: new Date(2020, 1, 3, 13, 0), end: new Date(2020, 1, 3, 14, 0) },
-      { id: '13', start: new Date(2020, 1, 3, 15, 30), end: new Date(2020, 1, 3, 15, 45) },
-      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30) },
+      { id: '12', start: new Date(2020, 1, 3, 13, 0), end: new Date(2020, 1, 3, 14, 0), status: 'available' },
+      { id: '13', start: new Date(2020, 1, 3, 15, 30), end: new Date(2020, 1, 3, 15, 45), status: 'available' },
+      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30), status: 'unavailable' },
     ],
   })
 
@@ -70,9 +70,33 @@ test('fetches appointment slots and renders them on the big calendar', async () 
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 4),
     events: [
-      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0), status: 'available' },
     ],
   })
+})
+
+test('renders unavailable slots in red', async () => {
+  await renderAsync(<HospitalAdminLandingPage hospitalId="1" />)
+  const { eventPropGetter } = lastRenderedProps(MockCalendar)
+  expect(eventPropGetter).toBeDefined()
+  const availableEventProps = eventPropGetter!(
+    { id: '12', start: '2020-02-03T13:00:00Z', end: '2020-02-03T14:00:00Z', status: 'available' },
+    new Date(2020, 1, 3, 13, 0),
+    new Date(2020, 1, 3, 14, 0),
+    false
+  )
+  const unavailableEventProps = eventPropGetter!(
+    { id: '14', start: '2020-02-07T17:00:00Z', end: '2020-02-07T17:30:00Z', status: 'unavailable' },
+    new Date(2020, 1, 7, 17, 0),
+    new Date(2020, 1, 7, 17, 30),
+    false
+  )
+  
+  expect(unavailableEventProps.style).toBeDefined()
+  expect(unavailableEventProps.style!.backgroundColor).toBe('red')
+
+  expect(availableEventProps.style).toBeDefined()
+  expect(availableEventProps.style!).not.toHaveProperty('backgroundColor')
 })
 
 test('can switch weeks using the small calendar', async () => {
@@ -83,7 +107,7 @@ test('can switch weeks using the small calendar', async () => {
   expectToBeRenderedWith(Calendar, {
     date: new Date(2020, 1, 18),
     events: [
-      { id: '15', start: new Date(2020, 1, 20, 10, 0), end: new Date(2020, 1, 20, 11, 0) },
+      { id: '15', start: new Date(2020, 1, 20, 10, 0), end: new Date(2020, 1, 20, 11, 0), status: 'available' },
     ],
   })
 })
@@ -250,8 +274,8 @@ test('displays returned timeslots', async () => {
       overwriteRoutes: true,
     },
     [
-      { id: '25', start: '2020-02-05T12:00:00Z', end: '2020-02-05T12:15:00Z' },
-      { id: '26', start: '2020-02-05T12:15:00Z', end: '2020-02-05T12:30:00Z' },
+      { id: '25', start: '2020-02-05T12:00:00Z', end: '2020-02-05T12:15:00Z', status: 'available' },
+      { id: '26', start: '2020-02-05T12:15:00Z', end: '2020-02-05T12:30:00Z', status: 'available' },
     ]
   );
 
@@ -270,9 +294,9 @@ test('displays returned timeslots', async () => {
 
   expectToBeRenderedWith(Calendar, {
     events: [
-      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
-      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
-      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0), status: 'available' },
+      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15), status: 'available' },
+      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30), status: 'available' },
     ],
   });
 
@@ -282,7 +306,7 @@ test('displays returned timeslots', async () => {
       overwriteRoutes: true,
     },
     [
-      { id: '27', start: '2020-02-07T14:00:00Z', end: '2020-02-07T14:15:00Z' },
+      { id: '27', start: '2020-02-07T14:00:00Z', end: '2020-02-07T14:15:00Z', status: 'available' },
     ]
   );
 
@@ -298,10 +322,10 @@ test('displays returned timeslots', async () => {
 
   expectToBeRenderedWith(Calendar, {
     events: [
-      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0) },
-      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15) },
-      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30) },
-      { id: '27', start: new Date(2020, 1, 7, 14, 0), end: new Date(2020, 1, 7, 14, 15) },
+      { id: '21', start: new Date(2020, 1, 6, 10, 0), end: new Date(2020, 1, 6, 11, 0), status: 'available' },
+      { id: '25', start: new Date(2020, 1, 5, 12, 0), end: new Date(2020, 1, 5, 12, 15), status: 'available' },
+      { id: '26', start: new Date(2020, 1, 5, 12, 15), end: new Date(2020, 1, 5, 12, 30), status: 'available' },
+      { id: '27', start: new Date(2020, 1, 7, 14, 0), end: new Date(2020, 1, 7, 14, 15), status: 'available' },
     ],
   });
 });
@@ -347,7 +371,7 @@ test('deletes appointment slots', async () => {
   })).toBe(true);
   expectToBeRenderedWith(Calendar, {
     events: [
-      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30) },
+      { id: '14', start: new Date(2020, 1, 7, 17, 0), end: new Date(2020, 1, 7, 17, 30), status: 'unavailable' },
     ],
   })
 });
