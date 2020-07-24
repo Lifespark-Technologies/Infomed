@@ -13,25 +13,25 @@ beforeEach(() => {
     .get(
       {
         url: 'path:/apis/hospitals/1/appointment-slots',
-        query: { since: '2020-06-01T00:00:00Z', until: '2020-07-01T00:00:00Z', },
+        query: { since: '2020-06-01T00:00:00Z', until: '2020-07-01T00:00:00Z' },
       },
       [
-        { id: '10', start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z' },
-        { id: '11', start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z' },
-        { id: '12', start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z' },
+        { id: '10', start: '2020-06-06T13:00:00Z', end: '2020-06-06T14:00:00Z', status: 'available' },
+        { id: '11', start: '2020-06-06T15:30:00Z', end: '2020-06-06T15:45:00Z', status: 'available' },
+        { id: '12', start: '2020-06-07T17:00:00Z', end: '2020-06-07T17:30:00Z', status: 'available' },
       ])
     .get(
       {
         url: 'path:/apis/hospitals/1/appointment-slots',
-        query: { since: '2020-07-01T00:00:00Z', until: '2020-08-01T00:00:00Z', },
+        query: { since: '2020-07-01T00:00:00Z', until: '2020-08-01T00:00:00Z' },
         overwriteRoutes: false,
       },
       [
-        { id: '13', start: '2020-07-10T17:00:00Z', end: '2020-07-10T18:00:00Z' },
+        { id: '13', start: '2020-07-10T17:00:00Z', end: '2020-07-10T18:00:00Z', status: 'available' },
       ])
     .get('path:/apis/hospitals/2/appointment-slots', {
       body: [
-        { id: '20', start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z' },
+        { id: '20', start: '2020-06-09T10:00:00Z', end: '2020-06-09T11:00:00Z', status: 'available' },
       ]
     })
     .post('/apis/hospitals/1/appointment-slots/11/schedule', 200)

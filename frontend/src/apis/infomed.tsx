@@ -32,12 +32,14 @@ export interface AppointmentSlot {
   readonly id: string;
   readonly start: Date;
   readonly end: Date;
+  readonly status: string;
 }
 
 interface AppointmentSlotJson {
   readonly id: string;
   readonly start: string;
   readonly end: string;
+  readonly status: string;
 }
 
 export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end: Date): Promise<AppointmentSlot[]> => {
@@ -51,10 +53,11 @@ export const fetchAppointmentSlots = async (hospitalId: string, start: Date, end
   return results.map(parseAppointmentSlot);
 };
 
-const parseAppointmentSlot = ({ id, start, end }: AppointmentSlotJson) => ({
+const parseAppointmentSlot = ({ id, start, end, status }: AppointmentSlotJson) => ({
   id,
   start: parseISO(start),
   end: parseISO(end),
+  status,
 });
 
 export const scheduleAppointment = async (
