@@ -9,8 +9,8 @@ import HospitalAdminLandingPage from './components/HospitalAdminLandingPage'
 import HospitalList from './components/HospitalList'
 import HospitalInventoryEditor from './components/HospitalInventoryEditor'
 import HospitalInventoryList from './components/HospitalInventoryList';
-import HospitalAdminDashboard from './components/HospitalAdminDashboard';
-import CognitoLoginAndReg from './components/CognitoLoginAndReg'
+import HospitalAdmin from './components/HospitalAdmin';
+import CognitoLoginAndReg from './components/CognitoLoginAndReg';
 
 class App extends React.Component {
   render() {
@@ -20,14 +20,11 @@ class App extends React.Component {
           <Header />
           <main>
             <Switch>
-              <Route path="/hospitals/:hospitalId/admin-dashboard">
-                <HospitalAdminDashboard />
-              </Route>
               <Route path="/login">
                 <CognitoLoginAndReg />
               </Route>
               <Route path="/hospitals/:hospitalId/admin">
-                <HospitalAdminLandingPage />
+                <HospitalAdmin />
               </Route>
               <Route path="/hospitals/:hospitalId/inventory">
                 <HospitalInventoryList />
