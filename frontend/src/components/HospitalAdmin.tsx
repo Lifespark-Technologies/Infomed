@@ -19,7 +19,7 @@ export default () => {
       <Admin dashboard={HospitalAdminLandingPage} dataProvider={dataProvider} > 
         <Resource name="users" list={UserList} edit={UserEdit} />
         <Resource name="inventory" list={InventoryList} edit={InventoryEdit} />
-        <Resource name="hospital_address" options={{ label: 'Hospital Address' }}  show={HospitalAddressShow} edit={HospitalAddressEdit} />
+        <Resource name="hospital_address" show={HospitalAddressShow} edit={HospitalAddressEdit} />
       </Admin>
     </div>
   )
