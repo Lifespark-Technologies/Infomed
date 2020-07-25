@@ -1,14 +1,23 @@
 import React, { useMemo } from "react";
-import Calendar, { CalendarTileProperties } from "react-calendar";
+import Calendar, { CalendarTileProperties, ViewCallbackProperties } from "react-calendar";
 import { AppointmentSlot } from "../apis/infomed";
 import { startOfDay } from "date-fns";
 
 interface AppointmentDatePickerProps {
   availableSlots: AppointmentSlot[];
+  startDate: Date;
+  onStartDateChange?: (date: Date) => void;
   onDatePicked?: (date: Date) => void;
 }
 
-export default ({ availableSlots, onDatePicked }: AppointmentDatePickerProps) => {
+export default (
+  {
+    startDate,
+    availableSlots,
+    onDatePicked,
+    onStartDateChange,
+  }: AppointmentDatePickerProps
+) => {
   const availableDays = useMemo(
     () => new Set(availableSlots.map(slot => startOfDay(slot.start).getTime())),
     [availableSlots]
@@ -26,9 +35,18 @@ export default ({ availableSlots, onDatePicked }: AppointmentDatePickerProps) =>
     onDatePicked(date instanceof Array ? date[0] : date);
   };
 
+  const onActiveStartDateChange = ({ activeStartDate }: ViewCallbackProperties) => {
+    onStartDateChange?.(activeStartDate);
+  };
+
   return (
     <div>
-      <Calendar tileDisabled={isTileDisabled} onChange={onChange} />
+      <Calendar
+        tileDisabled={isTileDisabled}
+        activeStartDate={startDate}
+        onChange={onChange}
+        onActiveStartDateChange={onActiveStartDateChange}
+      />
     </div>
   );
 }
