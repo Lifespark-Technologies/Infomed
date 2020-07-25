@@ -39,20 +39,17 @@ class MyAccountManager(BaseUserManager):
     It provides a create_user routine and a creat_superuser routine.
     """
 
-    def create_user(self, email, username, password=None, role=None):
+    def create_user(self, email, password=None):
         if not email:
             raise ValueError("Users must have a valid email address")
-        if not username:
-            raise ValueError("Users must have a valid username")
-        if not role:
-            raise ValueError("Users must have a valid role")
+        # if not role:
+        #     raise ValueError("Users must have a valid role")
 
         user = self.model(
             email = self.normalize_email(email),
-            username=username,
-            role=role,
         )
 
+        user.is_staff = False
         user.set_password(password)
         user.save(using=self._db)
 
@@ -65,6 +62,7 @@ class MyAccountManager(BaseUserManager):
         )
 
         user.is_superuser = True
+        user.is_staff = True
 
         user.save(using=self._db)
         return user
@@ -80,18 +78,21 @@ class Account(AbstractBaseUser):
     https://github.com/mitchtabian/CodingWithMitch-Blog-Course/blob/Customizing-Django-Admin-(search-and-filtering)/src/account/models.py.
     """
 
-
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
-    username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
 
     # Specify the type of account (hospital admin, hospital staff, or general user)
     # The Role object should never be able to be deleted
-    role = models.ForeignKey(Role, on_delete=models.PROTECT)
+    # TODO: For now, just implement one kind of user. Uncomment this when
+    # we want to be able to authenticate different kinds of users.
+    # role = models.ForeignKey(Role, on_delete=models.PROTECT)
 
     # Boolean to determine if the user is a superuser
     is_superuser = models.BooleanField(default=False)
+
+    # We should get rid of this
+    is_staff = models.BooleanField(default=False)
 
     # Allow a user to be associated with multiple different hospitals
     hospital = models.ManyToManyField(Hospital)
@@ -100,7 +101,7 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = "email"
 
     # When creating a user, the following fields must be required.
-    REQUIRED_FIELDS = ["username", "role",]
+    REQUIRED_FIELDS = []
 
     objects = MyAccountManager()
 
@@ -111,7 +112,7 @@ class Account(AbstractBaseUser):
         """
         Returns if the user has superuser permissions.
         """
-        return self.role.id == 0
+        return self.is_superuser
 
 
     # No idea what this does ATM.
