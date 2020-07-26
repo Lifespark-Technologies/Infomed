@@ -66,7 +66,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     # Allow a user to be associated with multiple different hospitals
-    hospital = models.ManyToManyField("hospitals.Hospital")
+    hospital = models.ManyToManyField("hospitals.Hospital", blank=True)
 
     # Ensures that the user can only sign in using their email
     USERNAME_FIELD = "email"
