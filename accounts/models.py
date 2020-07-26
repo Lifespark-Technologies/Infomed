@@ -95,7 +95,7 @@ class HospitalStaff(Account):
 
 
 class GeneralUser(Account):
-    doctor = models.ForeignKey(HospitalStaff, on_delete=models.DO_NOTHING)
+    doctor = models.ForeignKey(HospitalStaff, related_name="general_users", on_delete=models.DO_NOTHIN)
 
 
 class HospitalAdmin(Account):

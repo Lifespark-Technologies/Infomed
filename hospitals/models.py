@@ -50,6 +50,11 @@ class AppointmentSlot(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
 
+    # Assign this slot to someone, but if the user deletes their account,
+    # it shouldn't get rid of the foreign key.
+    general_user = models.ForeignKey("accounts.GeneralUser", related_name="general_user_appointments", on_delete=models.DO_NOTHING)
+    hospital_staff = models.ForeignKey("accounts.HospitalStaff", related_name="staff_appointments", on_delete=models.DO_NOTHING)
+
     # Ensuring that only the two choices described above are possible.
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, blank="")
 
