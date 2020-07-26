@@ -83,19 +83,22 @@ class Account(AbstractBaseUser):
         """
         Returns if the user has superuser permissions.
         """
-        return self.is_superuser
+        # If the user is a superuser, we don't even have to 
+        # see if the user has permissions for this or not.
+        if self.is_superuser:
+            return True
 
-
-    # No idea what this does ATM.
     def has_module_perms(self, app_label):
         return True
+
+
 
 class HospitalStaff(Account):
     is_doctor = models.BooleanField(default=False)
 
 
 class GeneralUser(Account):
-    doctor = models.ForeignKey(HospitalStaff, related_name="general_users", on_delete=models.DO_NOTHIN)
+    doctor = models.ForeignKey(HospitalStaff, related_name="general_users", on_delete=models.DO_NOTHING)
 
 
 class HospitalAdmin(Account):
