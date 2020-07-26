@@ -1,34 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from hospitals.models import Hospital
-
-# Create your models here.
-class Role(models.Model):
-    """
-    This is designates a role to a given user. 
-    At the moment, no user can assume more than one role. But 
-    in the event we need that added complexity, this model should
-    make that change much easier. This has been done following the
-    example here: https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html.
-    """
-
-    HOSP_ADMIN = 1
-    HOSP_STAFF = 2
-    GENERAL_USER = 3
-    GOVERNMENT_OFFICIAL = 4
-
-    ROLE_CHOICES = (
-        (HOSP_ADMIN, "admin"),
-        (HOSP_STAFF, "staff"),
-        (GENERAL_USER, "general_user"),
-        (GOVERNMENT_OFFICIAL, "government_official")
-    )
-
-    id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
-
-    def __str__(self):
-        return self.get_id_display()
-
 
 
 class MyAccountManager(BaseUserManager):
@@ -95,7 +66,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     # Allow a user to be associated with multiple different hospitals
-    hospital = models.ManyToManyField(Hospital)
+    hospital = models.ManyToManyField("hospitals.Hospital")
 
     # Ensures that the user can only sign in using their email
     USERNAME_FIELD = "email"
@@ -118,3 +89,19 @@ class Account(AbstractBaseUser):
     # No idea what this does ATM.
     def has_module_perms(self, app_label):
         return True
+
+class HospitalStaff(Account):
+    is_doctor = models.BooleanField(default=False)
+
+
+class GeneralUser(Account):
+    doctor = models.ForeignKey(HospitalStaff, on_delete=models.DO_NOTHING)
+
+
+class HospitalAdmin(Account):
+    """
+    Creates a proxy class for the Account, since this 
+    user doesn't have any personal attributes to keep track of.
+    """
+    class Meta:
+        proxy = True
