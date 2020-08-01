@@ -53,12 +53,6 @@ class Account(AbstractBaseUser):
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
 
-    # Specify the type of account (hospital admin, hospital staff, or general user)
-    # The Role object should never be able to be deleted
-    # TODO: For now, just implement one kind of user. Uncomment this when
-    # we want to be able to authenticate different kinds of users.
-    # role = models.ForeignKey(Role, on_delete=models.PROTECT)
-
     # Boolean to determine if the user is a superuser
     is_superuser = models.BooleanField(default=False)
 
