@@ -34,7 +34,7 @@ class AccountAdmin(UserAdmin):
         }),
     )
 
-    ordering = ()
+    ordering = ("email", "date_joined", "last_login",)
     filter_horizontal = ()
 
 
@@ -44,6 +44,7 @@ class GeneralUserAdmin(AccountAdmin):
 
     list_display = AccountAdmin.list_display + ("doctor",)
     search_fields = AccountAdmin.search_fields + ("doctor",)
+    list_filter = AccountAdmin.list_filter + ("doctor",)
     
     fieldsets = (
         (None, {"fields": AccountAdmin.fieldset_fields + ("doctor",)}),
@@ -56,6 +57,7 @@ class HospitalStaffAdmin(AccountAdmin):
 
     list_display = AccountAdmin.list_display + ("is_doctor",)
     search_fields = AccountAdmin.search_fields + ("is_doctor",)
+    list_filter = AccountAdmin.list_filter + ("is_doctor",)
 
     fieldsets = (
         (None, {"fields": AccountAdmin.fieldset_fields + ("is_doctor",)}),

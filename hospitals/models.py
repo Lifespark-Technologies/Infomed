@@ -62,5 +62,5 @@ class AppointmentSlot(models.Model):
     hospital = models.ForeignKey(Hospital, related_name="appointment_slots", on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.hospital) + str(self.start) + str(self.end)
+        return str(self.hospital)
 
