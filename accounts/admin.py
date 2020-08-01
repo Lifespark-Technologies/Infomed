@@ -22,7 +22,7 @@ class AccountAdmin(UserAdmin):
     readonly_fields = ("date_joined", "last_login")
     list_filter = ("is_staff", "is_superuser",)
 
-    fieldset_fields = ("email", "is_superuser", "is_staff", "hospital")
+    fieldset_fields = ("email", "password", "is_superuser", "is_staff", "hospital")
     
     fieldsets = (
         (None, {"fields": fieldset_fields}),
