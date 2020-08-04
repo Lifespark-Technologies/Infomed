@@ -92,7 +92,12 @@ class HospitalStaff(Account):
 
 
 class GeneralUser(Account):
-    doctor = models.ForeignKey(HospitalStaff, related_name="general_users", on_delete=models.DO_NOTHING)
+    doctor = models.ForeignKey(
+        HospitalStaff, 
+        related_name="general_users", 
+        on_delete=models.DO_NOTHING,
+        null=True
+    )
 
 
 class HospitalAdmin(Account):
@@ -100,5 +105,4 @@ class HospitalAdmin(Account):
     Creates a proxy class for the Account, since this 
     user doesn't have any personal attributes to keep track of.
     """
-    class Meta:
-        proxy = True
+    pass
