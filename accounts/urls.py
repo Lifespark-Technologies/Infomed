@@ -4,7 +4,7 @@ from . import views
 
 
 router = routers.SimpleRouter(trailing_slash=False)
-router.register("accounts", views.AuthenticatedReadViewSet)
+router.register("accounts", views.AuthenticatedAccountReadViewSet)
 
 urlpatterns = [
     path("", include(router.urls))

@@ -16,12 +16,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 from rest_framework import views, generics, mixins
-from .models import Account
-from .serializers import AccountSerializer
+from .models import Account, GeneralUser, HospitalAdmin, HospitalStaff
+from .serializers import (
+    AccountSerializer, 
+    GeneralUserSerializer, 
+    HospitalStaffSerializer, 
+    HospitalAdminSerializer
+)
 
 # Create your views here.
 
-class AuthenticatedReadViewSet(viewsets.ReadOnlyModelViewSet):
+class AuthenticatedAccountReadViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
