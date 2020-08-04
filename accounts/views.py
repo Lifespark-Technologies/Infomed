@@ -24,12 +24,43 @@ from .serializers import (
     HospitalAdminSerializer
 )
 
+from . import forms as account_forms
+
 # Create your views here.
 
-class AuthenticatedAccountReadViewSet(viewsets.ReadOnlyModelViewSet):
+class AccountView(
+    mixins.ListModelMixin, 
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
 
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    @action(detail=False, methods=["post",])
+    def create_user(self, request):
+        email = request.POST["email"]
+        password = request.POST["password"]
+
+        # Write the logic to create the user here...
+        account_form = account_forms.AccountCreationForm(request.data)
+
+        if account_form.is_valid():
+            account = account_form.save()
+            login(request, account)
+            return Response("gets here!")
+
+        else:
+            return Response(account_form.errors)
+
+    def login_user(self, request):
+        pass
+
+    def update(self, request, *args, **kwargs):
+        pass
+
+    def destroy(self, request, *args, **kwargs):
+        pass
 
 
     # @authentication_classes([SessionAuthentication, BasicAuthentication])
