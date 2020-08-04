@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import (
     csrf_exempt, 
     csrf_protect, 
@@ -39,9 +39,6 @@ class AccountView(
 
     @action(detail=False, methods=["post",])
     def create_user(self, request):
-        email = request.POST["email"]
-        password = request.POST["password"]
-
         # Write the logic to create the user here...
         account_form = account_forms.AccountCreationForm(request.data)
 
@@ -53,8 +50,25 @@ class AccountView(
         else:
             return Response(account_form.errors)
 
+
+    @action(detail=False, methods=["get", "post",])
+    def logout_user(self, request):
+        logout(request)
+        return Response("logout success")
+
+
+    @action(detail=False, methods=["post",])
     def login_user(self, request):
-        pass
+        email = request.POST["email"]
+        password = request.POST["password"]
+
+        account = authenticate(request.data, username=email, password=password)
+
+        if account is not None:
+            login(request, account)
+            return Response("success")
+        else:
+            return Response("fail")
 
     def update(self, request, *args, **kwargs):
         pass
